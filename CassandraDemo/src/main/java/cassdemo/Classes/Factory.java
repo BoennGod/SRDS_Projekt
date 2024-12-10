@@ -1,7 +1,15 @@
+package cassdemo.classes;
+
 import cassdemo.backend.BackendException;
 import cassdemo.backend.BackendSession;
+import cassdemo.classes.Machine;
+import cassdemo.classes.Task;
 
-class Factory implements Runnable {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public class Factory implements Runnable {
     //1. machines
     // 1.1 choose which you want
     // 1.2 take what you want and check if you've taken it
@@ -13,65 +21,57 @@ class Factory implements Runnable {
     // 2.3 assign this task to the machine
     // 2.4 after doing everything I can do on this task, free it for the others
     //
-    //
 
-    String id;
+
+    int id;
     private BackendSession session;
 
+    private List<Machine> machines;
+    private List<Machine> lockedMachines;
 
-    public Factory(BackendSession session, String id) {
+    public Factory(BackendSession session, int id) {
         this.session = session;
         this.id = id;
+        this.lockedMachines = new ArrayList<>();
     }
-
-
-
-
-
-    private static final List<String> names = Arrays.asList("Borys", "Natalia", "Patryk", "Mateusz");
-
-
-
 
     @Override
     public void run() {
         Random random = new Random();
-        for (int i=0 ;i<10000;i++){
-            String selectedName = names.get(random.nextInt(names.size()));
-            System.out.println(id + ": selected Name: " + selectedName);
 
-            // Check if the name is taken
-            String existingId = session.selectName(selectedName);
-            if (existingId != null) {
-                System.out.println(id + ": selected name " + selectedName + " but it is taken by " + existingId);
+        System.out.println("Started a Factory " + id);
+        machines = session.getMachines();
+        System.out.println("got machines");
+
+        while (lockedMachines.size() < 3) {
+            List<Machine> availableMachines = new ArrayList<>();
+            for (Machine machine : machines) {
+                if (machine.getFactoryId() == 0) {
+                    availableMachines.add(machine);
+                }
             }
-            else {
-                // Name is free, insert it with the id
-                session.insertName(selectedName, id);
-//				System.out.println(selectedName + " is free. Inserted into the table.");
+            if (availableMachines.isEmpty()) {
+                System.out.println("No available machines to lock.");
+                break;
+            }
+            System.out.println("got to availible machines");
 
-                // Verify if the name is taken by us
-                existingId = session.selectName(selectedName);
-                if (existingId.equals(id)) {
-                    System.out.println(id + ": " + selectedName + " is now taken by me");
-                } else {
-                    System.out.println(id + ": tried selecting " + selectedName + ", but it has been taken by " + existingId);
-                    continue;
-                }
+            Machine machine = availableMachines.get(random.nextInt(availableMachines.size()));
+            System.out.println("Attempting to lock machine: " + machine);
 
-                // Wait for 1 ms
-                try {
-                    Thread.sleep(2);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            boolean locked = session.lockMachine(id, machine.getMachineId());
 
-                // Free the nick by deleting it
-                session.deleteName(selectedName);
-                System.out.println(id + ": I freed " + selectedName);
-                // Exit the main loop after successfully inserting and deleting
+            if (locked) {
+                System.out.println("Successfully locked machine with ID: " + machine.getMachineId());
+                lockedMachines.add(machine);
+
+                // Update local copy to prevent trying to lock the same machine
+                machines.remove(machine);
+            } else {
+                System.out.println("Failed to lock machine with ID: " + machine.getMachineId() + ". Trying another...");
             }
         }
-    }
 
+        System.out.println("Factory " + id + " locked machines: " + lockedMachines);
+    }
 }

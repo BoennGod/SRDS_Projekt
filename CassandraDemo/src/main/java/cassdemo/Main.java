@@ -10,54 +10,12 @@ import java.util.regex.Pattern;
 
 import cassdemo.backend.BackendException;
 import cassdemo.backend.BackendSession;
-import cassdemo.Factory;
+import cassdemo.classes.Factory;
 
 
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.ResultSet;
-
-
-
-
-class Klient implements Runnable {
-	int id;
-	private BackendSession session;
-
-	public ChatSim2(BackendSession session, int id) {
-		this.session = session;
-		this.id = id;
-	}
-
-	@Override
-	public void run() {
-		Random random = new Random();
-		for(int i = 0;i<100000;i++){
-
-			session.setUpdateSecond(id);
-			session.selectSecond();
-
-			String result = session.selectSecond();
-			if (result != null) {
-//				System.out.println("Selected Values: " + result);
-				Pattern pattern = Pattern.compile("col1: (-?\\d+), col2: (-?\\d+)");
-				Matcher matcher = pattern.matcher(result);
-
-				if (matcher.find()) {
-					int col1 = Integer.parseInt(matcher.group(1));
-					int col2 = Integer.parseInt(matcher.group(2));
-
-					if (col1 != -1* col2) {
-						System.out.println("ANOMALIA " + col1 + " " + col2);
-					}
-				}
-
-			}
-
-		}
-	}
-
-}
 
 
 
@@ -82,30 +40,17 @@ public class Main {
 		BackendSession session = new BackendSession(contactPoint, keyspace);
 
 
-		// ex 1
-//		Thread[] arr = new Thread[100];
-//		for (int i =0; i<100;i++){
-//			ChatSim chas = new ChatSim(session, ("Borys " + i));
-//			Thread titus = new Thread(chas);
-//			arr[i] = titus;
-//			titus.start();
-//		}
-//		for (int i =0; i<100;i++){
-//			try{
-//				arr[i].join();
-//			}catch (Exception e){
-//
-//			}
-//		}
-		//ex 2
-		Thread[] arr = new Thread[100];
-		for (int i =0; i<1000;i++){
-			ChatSim2 chaos = new ChatSim2(session, i);
+		int numthreads = 1;
+
+		Thread[] arr = new Thread[numthreads];
+
+		for (int i = 0; i<numthreads; i++){
+			Factory chaos = new Factory(session, i+1);
 			Thread titus = new Thread(chaos);
 			arr[i] = titus;
 			titus.start();
 		}
-		for (int i =0; i<1000;i++){
+		for (int i = 1; i<numthreads; i++){
 			try{
 				arr[i].join();
 			}catch (Exception e){

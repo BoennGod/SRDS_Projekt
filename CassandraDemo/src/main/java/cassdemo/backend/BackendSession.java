@@ -5,6 +5,10 @@ import com.datastax.driver.core.querybuilder.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cassdemo.classes.Machine;
+import java.util.ArrayList;
+import java.util.List;
+
 /*
  * For error handling done right see: 
  * https://www.datastax.com/dev/blog/cassandra-error-handling-done-right
@@ -32,14 +36,8 @@ public class BackendSession {
 		prepareStatements();
 	}
 
-	private static PreparedStatement SELECT_FROM_NAMES;
-	private static PreparedStatement INSERT_TO_NAMES;
-	private static PreparedStatement DELETE_NAME;
-
-	private static PreparedStatement UPDATE_SECOND;
-	private static PreparedStatement SELECT_SECOND;
-
-	private static PreparedStatement ADD_COUNTER;
+	private static PreparedStatement GET_MACHINES;
+	private static PreparedStatement LOCK_MACHINE;
 
 
 	private static final String USER_FORMAT = "- %-10s  %-16s %-10s %-10s\n";
@@ -48,12 +46,8 @@ public class BackendSession {
 
 	private void prepareStatements() throws BackendException {
 		try {
-//			SELECT_FROM_NAMES = session.prepare("SELECT * FROM nicks WHERE nick = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
-//			INSERT_TO_NAMES = session.prepare("INSERT INTO nicks (nick, id) VALUES (?, ?)").setConsistencyLevel(ConsistencyLevel.QUORUM);
-//			DELETE_NAME = session.prepare("DELETE FROM nicks WHERE nick = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
-//			UPDATE_SECOND = session.prepare("UPDATE czwarte set col1 = ?, col2 =? WHERE id = 0");
-//			SELECT_SECOND = session.prepare("SELECT * FROM czwarte WHERE id = 0");
-			ADD_COUNTER = session.prepare("UPDATE licznik SET ctr = ctr + 1 WHERE id = ?" ).setConsistencyLevel(ConsistencyLevel.ONE);
+			GET_MACHINES = session.prepare("SELECT * FROM machines").setConsistencyLevel(ConsistencyLevel.ONE);
+			LOCK_MACHINE = session.prepare("UPDATE machines SET factory_id = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
 
 	} catch (Exception e) {
 			throw new BackendException("Could not prepare statements. " + e.getMessage() + ".", e);
@@ -74,54 +68,41 @@ public class BackendSession {
 		}
 	}
 
-	public String selectName(String name) {
-		BoundStatement bs = new BoundStatement(SELECT_FROM_NAMES);
-		ResultSet resultSet = session.execute(bs.bind(name));
-		if (!resultSet.isExhausted()) {
-			Row row = resultSet.one();
-			return row.getString("id");
-		}
-		return null; // Return null if the name is free
-	}
 
-
-
-	public void insertName(String name, String id) {
-		BoundStatement bs = new BoundStatement(INSERT_TO_NAMES);
-		bs.bind(name, id);
-		session.execute(bs);
-	}
-
-	public void deleteName(String name) {
-		BoundStatement bs = new BoundStatement(DELETE_NAME);
-		bs.bind(name);
-		session.execute(bs);
-	}
-
-	public void setUpdateSecond(int id){
-		BoundStatement bs = new BoundStatement(UPDATE_SECOND);
-		bs.bind(id, -1*id);
-		session.execute(bs);
-	}
-	public String selectSecond(){
-		BoundStatement bs = new BoundStatement(SELECT_SECOND);
+	public List<Machine> getMachines(){
+		System.out.println("got here alright");
+		BoundStatement bs = new BoundStatement(GET_MACHINES);
+		System.out.println("got here alright 2");
 		ResultSet resultSet = session.execute(bs);
-		if (!resultSet.isExhausted()) {
-			Row row = resultSet.one();
-			int col1 = row.getInt("col1");
-			int col2 = row.getInt("col2");
-			return "col1: " + col1 + ", col2: " + col2;
+		System.out.println("got here alright 3");
+
+		List<Machine> machineList = new ArrayList<>();
+
+		for (Row row : resultSet) {
+			int id = row.getInt("id");
+			int factory = row.getInt("factory_id");
+			String product = row.getString("product");
+			int time = row.getInt("time");
+
+
+
+			Machine machine = new Machine(id, factory,  product, time);
+			machineList.add(machine);
 		}
-		return null;
+		return machineList;
 	}
+	public boolean lockMachine(int factory_id, int machineId) {
+		BoundStatement bs = new BoundStatement(LOCK_MACHINE);
+		bs.bind(factory_id, machineId);
 
+		try {
+			session.execute(bs);
+			return true;
+		} catch (Exception e) {
 
-	public void add_counter(int id){
-		BoundStatement bs = new BoundStatement(ADD_COUNTER);
-		bs.bind(id);
-
-		session.execute(bs);
-
+			System.err.println("Could not lock machine with id " + machineId + ": " + e.getMessage());
+			return false;
+		}
 	}
 
 
