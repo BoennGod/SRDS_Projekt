@@ -6,8 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cassdemo.classes.Machine;
+import cassdemo.classes.Task;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /*
  * For error handling done right see: 
@@ -39,6 +42,10 @@ public class BackendSession {
 	private static PreparedStatement GET_MACHINES;
 	private static PreparedStatement LOCK_MACHINE;
 
+	private static PreparedStatement GET_TASKS;
+	private static PreparedStatement LOCK_TASK;
+	private static PreparedStatement FREE_TASK;
+
 
 	private static final String USER_FORMAT = "- %-10s  %-16s %-10s %-10s\n";
 	// private static final SimpleDateFormat df = new
@@ -48,6 +55,9 @@ public class BackendSession {
 		try {
 			GET_MACHINES = session.prepare("SELECT * FROM machines").setConsistencyLevel(ConsistencyLevel.ONE);
 			LOCK_MACHINE = session.prepare("UPDATE machines SET factory_id = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
+			GET_TASKS = session.prepare("SELECT * FROM tasks").setConsistencyLevel(ConsistencyLevel.ONE);
+			LOCK_TASK = session.prepare("UPDATE tasks SET factory_id = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
+			FREE_TASK = session.prepare("UPDATE tasks SET factory_id = ?, tasks = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM) ;
 
 	} catch (Exception e) {
 			throw new BackendException("Could not prepare statements. " + e.getMessage() + ".", e);
@@ -98,6 +108,24 @@ public class BackendSession {
 			System.err.println("Could not lock machine with id " + machineId + ": " + e.getMessage());
 			return false;
 		}
+	}
+
+	public List<Task> getTasks(){
+		BoundStatement bs = new BoundStatement(GET_TASKS);
+		ResultSet resultSet = session.execute(bs);
+
+		List<Task> taskList = new ArrayList<>();
+
+		for (Row row : resultSet) {
+			int id = row.getInt("id");
+			int factory = row.getInt("factory_id");
+			Map<String, String> Tasks = row.getMap("tasks", String.class, String.class);
+
+
+			Task zadanie = new Task(id, factory, Tasks);
+			taskList.add(zadanie);
+		}
+		return taskList;
 	}
 
 

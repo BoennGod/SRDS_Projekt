@@ -1,17 +1,19 @@
 package cassdemo.classes;
 
 import java.util.List;
+import java.util.Map;
 import cassdemo.classes.Product;
 
 public class Task {
     private int clientId;
-    private List<Product> productsNeeded;
+    private int factoryId;
+    private Map<String, String> productsNeeded;
     private String taskStatus;
 
-    public Task(int clientId, List<Product> productsNeeded, String taskStatus) {
+    public Task(int clientId, int factoryId, Map<String, String> productsNeeded) {
         this.clientId = clientId;
+        this.factoryId = factoryId;
         this.productsNeeded = productsNeeded;
-        this.taskStatus = taskStatus;
     }
 
     // Getters and setters
@@ -23,11 +25,19 @@ public class Task {
         this.clientId = clientId;
     }
 
-    public List<Product> getProductsNeeded() {
+    public int getfactoryId() {
+        return factoryId;
+    }
+
+    public void setfactoryId(int factoryId) {
+        this.factoryId = factoryId;
+    }
+
+    public Map<String, String> getProductsNeeded() {
         return productsNeeded;
     }
 
-    public void setProductsNeeded(List<Product> productsNeeded) {
+    public void setProductsNeeded(Map<String, String> productsNeeded) {
         this.productsNeeded = productsNeeded;
     }
 
@@ -43,6 +53,7 @@ public class Task {
     public String toString() {
         return "Task{" +
                 "clientId='" + clientId + '\'' +
+                "factoryId='" + factoryId + '\'' +
                 ", productsNeeded=" + productsNeeded +
                 ", taskStatus='" + taskStatus + '\'' +
                 '}';

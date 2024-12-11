@@ -48,6 +48,7 @@ public class Main {
 			Factory chaos = new Factory(session, i);
 			Thread titus = new Thread(chaos);
 			arr[i] = titus;
+			System.out.println("" + titus);
 			titus.start();
 		}
 		for (int i = 0; i<numthreads; i++){
