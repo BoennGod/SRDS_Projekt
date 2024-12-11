@@ -70,11 +70,8 @@ public class BackendSession {
 
 
 	public List<Machine> getMachines(){
-		System.out.println("got here alright");
 		BoundStatement bs = new BoundStatement(GET_MACHINES);
-		System.out.println("got here alright 2");
 		ResultSet resultSet = session.execute(bs);
-		System.out.println("got here alright 3");
 
 		List<Machine> machineList = new ArrayList<>();
 
@@ -83,8 +80,6 @@ public class BackendSession {
 			int factory = row.getInt("factory_id");
 			String product = row.getString("product");
 			int time = row.getInt("time");
-
-
 
 			Machine machine = new Machine(id, factory,  product, time);
 			machineList.add(machine);

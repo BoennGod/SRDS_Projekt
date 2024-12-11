@@ -45,12 +45,12 @@ public class Main {
 		Thread[] arr = new Thread[numthreads];
 
 		for (int i = 0; i<numthreads; i++){
-			Factory chaos = new Factory(session, i+1);
+			Factory chaos = new Factory(session, i);
 			Thread titus = new Thread(chaos);
 			arr[i] = titus;
 			titus.start();
 		}
-		for (int i = 1; i<numthreads; i++){
+		for (int i = 0; i<numthreads; i++){
 			try{
 				arr[i].join();
 			}catch (Exception e){

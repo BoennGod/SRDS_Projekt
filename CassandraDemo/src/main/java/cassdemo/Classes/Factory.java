@@ -31,7 +31,7 @@ public class Factory implements Runnable {
 
     public Factory(BackendSession session, int id) {
         this.session = session;
-        this.id = id;
+        this.id = id + 1;
         this.lockedMachines = new ArrayList<>();
     }
 
@@ -41,7 +41,6 @@ public class Factory implements Runnable {
 
         System.out.println("Started a Factory " + id);
         machines = session.getMachines();
-        System.out.println("got machines");
 
         while (lockedMachines.size() < 3) {
             List<Machine> availableMachines = new ArrayList<>();
@@ -64,8 +63,6 @@ public class Factory implements Runnable {
             if (locked) {
                 System.out.println("Successfully locked machine with ID: " + machine.getMachineId());
                 lockedMachines.add(machine);
-
-                // Update local copy to prevent trying to lock the same machine
                 machines.remove(machine);
             } else {
                 System.out.println("Failed to lock machine with ID: " + machine.getMachineId() + ". Trying another...");
