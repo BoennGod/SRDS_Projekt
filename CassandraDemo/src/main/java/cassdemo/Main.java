@@ -1,22 +1,12 @@
 package cassdemo;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
-import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import cassdemo.Classes.Client;
 import cassdemo.backend.BackendException;
 import cassdemo.backend.BackendSession;
 import cassdemo.classes.Factory;
-
-
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.Session;
-import com.datastax.driver.core.ResultSet;
-
 
 
 public class Main {
@@ -42,17 +32,30 @@ public class Main {
 
 		int numthreads = 1;
 
-		Thread[] arr = new Thread[numthreads];
+        Thread[] clients = new Thread[numthreads];
+        Thread[] factories = new Thread[numthreads];
+        
+        for (int i =0; i<numthreads;i++){
+            Client c = new Client(session, i);
+            Factory f = new Factory(session, i);
+            Thread titus1 = new Thread(c);
+            Thread titus2 = new Thread(f);
+            clients[i] = titus1;
+            factories[i] = titus2;
+            titus1.start();
+			titus2.start();
+        }
+        for (int i =0; i<numthreads;i++){
+            try{
+                clients[i].join();
+            }catch (Exception e){
+
+            }
+        }
 
 		for (int i = 0; i<numthreads; i++){
-			Factory chaos = new Factory(session, i);
-			Thread titus = new Thread(chaos);
-			arr[i] = titus;
-			titus.start();
-		}
-		for (int i = 0; i<numthreads; i++){
 			try{
-				arr[i].join();
+                factories[i].join();
 			}catch (Exception e){
 
 			}
