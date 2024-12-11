@@ -3,7 +3,7 @@ package cassdemo;
 import java.io.IOException;
 import java.util.Properties;
 
-import cassdemo.Classes.Client;
+import cassdemo.classes.Client;
 import cassdemo.backend.BackendException;
 import cassdemo.backend.BackendSession;
 import cassdemo.classes.Factory;

@@ -1,7 +1,6 @@
 package cassdemo.classes;
 
 import java.util.List;
-import cassdemo.classes.Product;
 
 public class Task {
     private int clientId;

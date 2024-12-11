@@ -1,9 +1,6 @@
 package cassdemo.classes;
 
-import cassdemo.backend.BackendException;
 import cassdemo.backend.BackendSession;
-import cassdemo.classes.Machine;
-import cassdemo.classes.Task;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,6 @@
 package cassdemo.backend;
 
 import com.datastax.driver.core.*;
-import com.datastax.driver.core.querybuilder.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

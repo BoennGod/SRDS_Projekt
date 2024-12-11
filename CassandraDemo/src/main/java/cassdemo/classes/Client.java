@@ -1,4 +1,4 @@
-package cassdemo.Classes;
+package cassdemo.classes;
 
 import java.util.*;
 
