@@ -5,6 +5,7 @@ import cassdemo.backend.BackendSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Map;
 
 public class Factory implements Runnable {
     //1. machines
@@ -37,7 +38,10 @@ public class Factory implements Runnable {
         Random random = new Random();
 
         System.out.println("Started a Factory " + id);
+
+        // machines
         machines = session.getMachines();
+
 
         while (lockedMachines.size() < 3) {
             List<Machine> availableMachines = new ArrayList<>();
@@ -67,5 +71,17 @@ public class Factory implements Runnable {
         }
 
         System.out.println("Factory " + id + " locked machines: " + lockedMachines);
+
+        // tasks
+        while(true){
+            System.out.println(""+session.getTasks());
+
+            break;
+        }
+        // while loop,
+        // get all tasks
+        // try to lock one elegible and then see if you took it,
+        // do all products that you can
+        // give back the task
     }
 }

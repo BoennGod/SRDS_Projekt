@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cassdemo.classes.Machine;
+import cassdemo.classes.Task;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +46,11 @@ public class BackendSession {
     private static PreparedStatement DELETE_FROM_TASKS;
     private static PreparedStatement SELECT_FROM_TASKS;
 
+	private static PreparedStatement GET_TASKS;
+	private static PreparedStatement LOCK_TASK;
+	private static PreparedStatement FREE_TASK;
+
+
 	private static final String USER_FORMAT = "- %-10s  %-16s %-10s %-10s\n";
 	// private static final SimpleDateFormat df = new
 	// SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -52,6 +59,10 @@ public class BackendSession {
 		try {
 			GET_MACHINES = session.prepare("SELECT * FROM machines").setConsistencyLevel(ConsistencyLevel.ONE);
 			LOCK_MACHINE = session.prepare("UPDATE machines SET factory_id = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
+			GET_TASKS = session.prepare("SELECT * FROM tasks").setConsistencyLevel(ConsistencyLevel.ONE);
+			LOCK_TASK = session.prepare("UPDATE tasks SET factory_id = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
+			FREE_TASK = session.prepare("UPDATE tasks SET factory_id = ?, tasks = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM) ;
+
             SELECT_FROM_TASKS = session.prepare("SELECT * FROM Tasks WHERE id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
             INSERT_TO_TASKS = session.prepare("INSERT INTO Tasks (id, factory_id, tasks) VALUES (?, ?, ?)").setConsistencyLevel(ConsistencyLevel.QUORUM);
             DELETE_FROM_TASKS = session.prepare("DELETE FROM Tasks WHERE id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
@@ -61,6 +72,49 @@ public class BackendSession {
 
 		logger.info("Statements prepared");
 	}
+
+
+    protected void finalize() {
+        try {
+            if (session != null) {
+                session.getCluster().close();
+            }
+        } catch (Exception e) {
+            logger.error("Could not close existing cluster", e);
+        }
+    }
+
+    public List<Machine> getMachines(){
+        BoundStatement bs = new BoundStatement(GET_MACHINES);
+        ResultSet resultSet = session.execute(bs);
+
+        List<Machine> machineList = new ArrayList<>();
+
+        for (Row row : resultSet) {
+            int id = row.getInt("id");
+            int factory = row.getInt("factory_id");
+            String product = row.getString("product");
+            int time = row.getInt("time");
+
+            Machine machine = new Machine(id, factory,  product, time);
+            machineList.add(machine);
+        }
+        return machineList;
+    }
+
+    public boolean lockMachine(int factory_id, int machineId) {
+        BoundStatement bs = new BoundStatement(LOCK_MACHINE);
+        bs.bind(factory_id, machineId);
+
+        try {
+            session.execute(bs);
+            return true;
+        } catch (Exception e) {
+
+            System.err.println("Could not lock machine with id " + machineId + ": " + e.getMessage());
+            return false;
+        }
+    }
 
 	public void insertTask(Integer id, HashMap<String, String> tasks ){
 		boolean error = false;
@@ -100,46 +154,23 @@ public class BackendSession {
 		return true;
 	}
 
-	protected void finalize() {
-		try {
-			if (session != null) {
-				session.getCluster().close();
-			}
-		} catch (Exception e) {
-			logger.error("Could not close existing cluster", e);
-		}
-	}
 
-
-	public List<Machine> getMachines(){
-		BoundStatement bs = new BoundStatement(GET_MACHINES);
+	public List<Task> getTasks(){
+		BoundStatement bs = new BoundStatement(GET_TASKS);
 		ResultSet resultSet = session.execute(bs);
 
-		List<Machine> machineList = new ArrayList<>();
+		List<Task> taskList = new ArrayList<>();
 
 		for (Row row : resultSet) {
 			int id = row.getInt("id");
 			int factory = row.getInt("factory_id");
-			String product = row.getString("product");
-			int time = row.getInt("time");
+			Map<String, String> Tasks = row.getMap("tasks", String.class, String.class);
 
-			Machine machine = new Machine(id, factory,  product, time);
-			machineList.add(machine);
+
+			Task zadanie = new Task(id, factory, Tasks);
+			taskList.add(zadanie);
 		}
-		return machineList;
-	}
-	public boolean lockMachine(int factory_id, int machineId) {
-		BoundStatement bs = new BoundStatement(LOCK_MACHINE);
-		bs.bind(factory_id, machineId);
-
-		try {
-			session.execute(bs);
-			return true;
-		} catch (Exception e) {
-
-			System.err.println("Could not lock machine with id " + machineId + ": " + e.getMessage());
-			return false;
-		}
+		return taskList;
 	}
 
 
