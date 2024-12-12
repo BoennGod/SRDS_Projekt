@@ -42,12 +42,14 @@ public class Factory implements Runnable {
         // machines
         machines = session.getMachines();
 
+        // see what machines are already assigned to us
         for (Machine machine : machines) {
             if (machine.getFactoryId() == id) {
                 lockedMachines.add(machine);
                 products.add(machine.getProductType());
             }
         }
+        // try to assign at least 3 machines
         while (lockedMachines.size() < 3) {
             List<Machine> availableMachines = new ArrayList<>();
             for (Machine machine : machines) {
@@ -65,7 +67,11 @@ public class Factory implements Runnable {
 
             boolean locked = session.lockMachine(id, machine.getMachineId());
 
-            if (locked) {
+
+            boolean loaded = id == session.checkedLockedMachine(machine.getMachineId());
+
+
+            if (locked && loaded) {
                 System.out.println("Successfully locked machine with ID: " + machine.getMachineId());
                 lockedMachines.add(machine);
                 products.add(machine.getProductType());
@@ -77,9 +83,27 @@ public class Factory implements Runnable {
 
         System.out.println("Factory " + id + " locked machines: " + lockedMachines);
 
+
+        List<Task> tasks;
         // tasks
         while(true){
-            System.out.println(""+session.getTasks());
+            tasks = session.getTasks();
+            System.out.println(tasks);
+            Task mytask;
+
+            for (Task task : tasks) {               //check all tasks
+                if (task.getFactoryId() == 0) {     // if task is free
+                    if (products.contains(task.getNeededProduct())){
+                        mytask = task;
+
+
+
+
+
+                    }
+                }
+            }
+
 
             break;
         }

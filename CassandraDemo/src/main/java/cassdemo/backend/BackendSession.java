@@ -42,12 +42,16 @@ public class BackendSession {
 
 	private static PreparedStatement GET_MACHINES;
 	private static PreparedStatement LOCK_MACHINE;
+	private static PreparedStatement CHECK_LOCKED_MACHINE;
+
     private static PreparedStatement INSERT_TO_TASKS;
     private static PreparedStatement DELETE_FROM_TASKS;
     private static PreparedStatement SELECT_FROM_TASKS;
 
 	private static PreparedStatement GET_TASKS;
 	private static PreparedStatement LOCK_TASK;
+	private static PreparedStatement CHECK_LOCKED_TASK;
+
 	private static PreparedStatement FREE_TASK;
 	private static PreparedStatement FINISH_TASK;
 
@@ -57,9 +61,12 @@ public class BackendSession {
 		try {
 			GET_MACHINES = session.prepare("SELECT * FROM machines").setConsistencyLevel(ConsistencyLevel.ONE);
 			LOCK_MACHINE = session.prepare("UPDATE machines SET factory_id = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
+			CHECK_LOCKED_MACHINE = session.prepare("SELECT factory_id FROM machines where id = ?").setConsistencyLevel(ConsistencyLevel.ONE);
 
 			GET_TASKS = session.prepare("SELECT * FROM tasks").setConsistencyLevel(ConsistencyLevel.ONE);
 			LOCK_TASK = session.prepare("UPDATE tasks SET factory_id = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
+			CHECK_LOCKED_TASK = session.prepare("SELECT factory_id FROM tasks where id = ?").setConsistencyLevel(ConsistencyLevel.ONE);
+
 			FREE_TASK = session.prepare("UPDATE tasks SET factory_id = ?, tasks = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM) ;
 //			FINISH_TASK = session.prepare("UPDATE tasks SET factory_id = ?, status = finished where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM) ;
 
@@ -117,6 +124,7 @@ public class BackendSession {
         }
     }
 
+
 	public void insertTask(Integer id, Map<String, String> tasks ){
 		boolean error = false;
 		BoundStatement bs = new BoundStatement(INSERT_TO_TASKS);
@@ -172,5 +180,46 @@ public class BackendSession {
 		return taskList;
 	}
 
+
+	public boolean lockTask(int factory_id, int taskId) {
+		BoundStatement bs = new BoundStatement(LOCK_TASK);
+		bs.bind(factory_id, taskId);
+
+		try {
+			session.execute(bs);
+			return true;
+		} catch (Exception e) {
+			System.err.println("Could not lock task with id " + taskId + ": " + e.getMessage());
+			return false;
+		}
+	}
+
+	public int checkedLockedMachine(int machineId) {
+		return LockChecking(machineId, CHECK_LOCKED_MACHINE);
+	}
+
+	public int checkedLockedTasks(int taskId) {
+		return LockChecking(taskId, CHECK_LOCKED_TASK);
+	}
+
+	private int LockChecking(int id, PreparedStatement command) {
+		BoundStatement bs = new BoundStatement(command);
+		bs.bind(id);
+
+		try {
+			ResultSet resultSet = session.execute(bs);
+			Row row = resultSet.one();
+
+			if (row != null) {
+				return row.getInt("factory_id");
+			} else {
+				System.err.println("No factory_id found for id " + id);
+				return 0;
+			}
+		} catch (Exception e) {
+			System.err.println("Could not retrieve factory_id for id " + id + ": " + e.getMessage());
+			return 0;
+		}
+	}
 
 }

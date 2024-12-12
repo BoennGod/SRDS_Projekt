@@ -25,11 +25,11 @@ public class Task {
         this.clientId = clientId;
     }
 
-    public int getfactoryId() {
+    public int getFactoryId() {
         return factoryId;
     }
 
-    public void setfactoryId(int factoryId) {
+    public void setFactoryId(int factoryId) {
         this.factoryId = factoryId;
     }
 
@@ -49,6 +49,28 @@ public class Task {
         this.taskStatus = taskStatus;
     }
 
+
+    public String getNeededProduct() {
+        for (Map.Entry<String, String> entry : productsNeeded.entrySet()) {
+            if ("pending".equals(entry.getValue())) {                           //HERE SET PENDING TO WHATEVER WE DECIDED ON
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+
+    public String setNeededProduct() {
+        for (Map.Entry<String, String> entry : productsNeeded.entrySet()) {
+            if ("pending".equals(entry.getValue())) {                           //HERE SET PENDING TO WHATEVER WE DECIDED ON
+                productsNeeded.put(entry.getKey(), "done");                     //HERE SET DONE TO WHATEVER WE DECIDED ON
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+
     @Override
     public String toString() {
         return "Task{" +
@@ -58,4 +80,6 @@ public class Task {
                 ", taskStatus='" + taskStatus + '\'' +
                 '}';
     }
+
+
 }
