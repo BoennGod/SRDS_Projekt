@@ -32,31 +32,30 @@ public class Main {
 
 		int numthreads = 1;
 
-        Thread[] clients = new Thread[numthreads];
+//        Thread[] clients = new Thread[numthreads];
         Thread[] factories = new Thread[numthreads];
         
         for (int i =0; i<numthreads;i++){
-            Client c = new Client(session, i);
+//            Client c = new Client(session, i);
             Factory f = new Factory(session, i);
-            Thread titus1 = new Thread(c);
+//            Thread titus1 = new Thread(c);
             Thread titus2 = new Thread(f);
-            clients[i] = titus1;
+//            clients[i] = titus1;
             factories[i] = titus2;
-            titus1.start();
+//            titus1.start();
 			titus2.start();
         }
-        for (int i =0; i<numthreads;i++){
-            try{
-                clients[i].join();
-            }catch (Exception e){
-
-            }
-        }
-
+//        for (int i =0; i<numthreads;i++){
+//            try{
+//                clients[i].join();
+//            }catch (Exception ignored){
+//
+//            }
+//        }
 		for (int i = 0; i<numthreads; i++){
 			try{
                 factories[i].join();
-			}catch (Exception e){
+			}catch (Exception ignored){
 
 			}
 		}
