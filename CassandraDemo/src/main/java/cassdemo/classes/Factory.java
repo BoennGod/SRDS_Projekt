@@ -20,11 +20,10 @@ public class Factory implements Runnable {
     // 2.4 after doing everything I can do on this task, free it for the others
     //
 
+    private final BackendSession session;
 
     int id;
-    private BackendSession session;
-
-    private List<Machine> machines;
+    private List<String> products;
     private List<Machine> lockedMachines;
 
     public Factory(BackendSession session, int id) {
@@ -35,6 +34,7 @@ public class Factory implements Runnable {
 
     @Override
     public void run() {
+        List<Machine> machines;
         Random random = new Random();
 
         System.out.println("Started a Factory " + id);
@@ -42,19 +42,23 @@ public class Factory implements Runnable {
         // machines
         machines = session.getMachines();
 
-
+        for (Machine machine : machines) {
+            if (machine.getFactoryId() == id) {
+                lockedMachines.add(machine);
+                products.add(machine.getProductType());
+            }
+        }
         while (lockedMachines.size() < 3) {
             List<Machine> availableMachines = new ArrayList<>();
             for (Machine machine : machines) {
-                if (machine.getFactoryId() == 0) {
+                if (machine.getFactoryId() == 0 && !products.contains(machine.getProductType())) {
                     availableMachines.add(machine);
                 }
             }
             if (availableMachines.isEmpty()) {
-                System.out.println("No available machines to lock.");
+                System.out.println("factory " + id + " has no available machines to lock.");
                 break;
             }
-            System.out.println("got to availible machines");
 
             Machine machine = availableMachines.get(random.nextInt(availableMachines.size()));
             System.out.println("Attempting to lock machine: " + machine);
@@ -64,6 +68,7 @@ public class Factory implements Runnable {
             if (locked) {
                 System.out.println("Successfully locked machine with ID: " + machine.getMachineId());
                 lockedMachines.add(machine);
+                products.add(machine.getProductType());
                 machines.remove(machine);
             } else {
                 System.out.println("Failed to lock machine with ID: " + machine.getMachineId() + ". Trying another...");
@@ -80,7 +85,7 @@ public class Factory implements Runnable {
         }
         // while loop,
         // get all tasks
-        // try to lock one elegible and then see if you took it,
+        // try to lock one eligible and then see if you took it,
         // do all products that you can
         // give back the task
     }
