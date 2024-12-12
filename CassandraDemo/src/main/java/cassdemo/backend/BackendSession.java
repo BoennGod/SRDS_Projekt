@@ -49,23 +49,24 @@ public class BackendSession {
 	private static PreparedStatement GET_TASKS;
 	private static PreparedStatement LOCK_TASK;
 	private static PreparedStatement FREE_TASK;
+	private static PreparedStatement FINISH_TASK;
 
 
-	private static final String USER_FORMAT = "- %-10s  %-16s %-10s %-10s\n";
-	// private static final SimpleDateFormat df = new
-	// SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	private void prepareStatements() throws BackendException {
 		try {
 			GET_MACHINES = session.prepare("SELECT * FROM machines").setConsistencyLevel(ConsistencyLevel.ONE);
 			LOCK_MACHINE = session.prepare("UPDATE machines SET factory_id = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
+
 			GET_TASKS = session.prepare("SELECT * FROM tasks").setConsistencyLevel(ConsistencyLevel.ONE);
 			LOCK_TASK = session.prepare("UPDATE tasks SET factory_id = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
 			FREE_TASK = session.prepare("UPDATE tasks SET factory_id = ?, tasks = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM) ;
+//			FINISH_TASK = session.prepare("UPDATE tasks SET factory_id = ?, status = finished where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM) ;
 
             SELECT_FROM_TASKS = session.prepare("SELECT * FROM Tasks WHERE id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
             INSERT_TO_TASKS = session.prepare("INSERT INTO Tasks (id, factory_id, tasks) VALUES (?, ?, ?)").setConsistencyLevel(ConsistencyLevel.QUORUM);
             DELETE_FROM_TASKS = session.prepare("DELETE FROM Tasks WHERE id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
+
 	} catch (Exception e) {
 			throw new BackendException("Could not prepare statements. " + e.getMessage() + ".", e);
 		}
@@ -116,7 +117,7 @@ public class BackendSession {
         }
     }
 
-	public void insertTask(Integer id, HashMap<String, String> tasks ){
+	public void insertTask(Integer id, Map<String, String> tasks ){
 		boolean error = false;
 		BoundStatement bs = new BoundStatement(INSERT_TO_TASKS);
 		bs.bind(id, null, tasks);
@@ -130,14 +131,13 @@ public class BackendSession {
 		session.execute(bs);
 	}
 
-	public Integer selectTask(Integer id){
+	public void selectTask(Integer id){
 		BoundStatement bs = new BoundStatement(SELECT_FROM_TASKS);
 		ResultSet resultSet = session.execute(bs.bind(id));
 		if (!resultSet.isExhausted()) {
 			Row row = resultSet.one();
-			return row.getInt("id");
+			row.getInt("id");
 		}
-		return null;
 	}
 
 	public Boolean checkifTaskDone(Integer id){
@@ -165,7 +165,6 @@ public class BackendSession {
 			int id = row.getInt("id");
 			int factory = row.getInt("factory_id");
 			Map<String, String> Tasks = row.getMap("tasks", String.class, String.class);
-
 
 			Task zadanie = new Task(id, factory, Tasks);
 			taskList.add(zadanie);
