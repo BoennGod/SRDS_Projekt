@@ -126,10 +126,10 @@ public class Factory implements Runnable {
                 for (Machine machine : lockedMachines) {
                     if (machine.getProductType().equals(lockedTask.getNextProduct())) {
                         try {
-                            Thread.sleep(machine.getTime()); // Sleep for 1 second
+                            Thread.sleep(machine.getTime()* 1000L);
                         } catch (InterruptedException e) {
                             System.err.println("Factory " + id + " was interrupted while waiting.");
-                            Thread.currentThread().interrupt(); // Preserve the interrupt status
+                            Thread.currentThread().interrupt();
                         }
                         lockedTask.setNextProduct();
                         break;
