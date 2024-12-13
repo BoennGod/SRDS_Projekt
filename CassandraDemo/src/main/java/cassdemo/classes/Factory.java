@@ -5,7 +5,6 @@ import cassdemo.backend.BackendSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Map;
 
 public class Factory implements Runnable {
     //1. machines
@@ -85,25 +84,69 @@ public class Factory implements Runnable {
 
 
         List<Task> tasks;
+        boolean chosen;
+
         // tasks
         while(true){
             tasks = session.getTasks();
             System.out.println(tasks);
-            Task mytask;
+            Task lockedTask = null;
+            chosen = false;
 
-            for (Task task : tasks) {               //check all tasks
-                if (task.getFactoryId() == 0) {     // if task is free
-                    if (products.contains(task.getNeededProduct())){
-                        mytask = task;
+            for (Task task : tasks) {                                   //check all tasks
+                if (task.getFactoryId() == 0) {                         // if task is free
+                    if (products.contains(task.getNextProduct())){    // and has available product we can produce
+                        boolean locked = session.lockTask(id, task.getClientId());       //   try to lock it in
 
+                        boolean loaded  = id == session.checkedLockedTask(task.getClientId()); // check if truly locked
 
-
-
-
+                        if (locked && loaded){
+                            lockedTask = task;
+                            chosen = true;
+                            break;              //if done, exit
+                        }
                     }
                 }
             }
 
+            // if no task was chosen, try again
+            if (!chosen) {
+                try {
+                    Thread.sleep(1000); // Sleep for 1 second
+                } catch (InterruptedException e) {
+                    System.err.println("Factory " + id + " was interrupted while waiting.");
+                    Thread.currentThread().interrupt(); // Preserve the interrupt status
+                }
+                continue;
+            }
+
+
+            // create products needed for task
+            while (true){
+                for (Machine machine : lockedMachines) {
+                    if (machine.getProductType().equals(lockedTask.getNextProduct())) {
+                        try {
+                            Thread.sleep(machine.getTime()); // Sleep for 1 second
+                        } catch (InterruptedException e) {
+                            System.err.println("Factory " + id + " was interrupted while waiting.");
+                            Thread.currentThread().interrupt(); // Preserve the interrupt status
+                        }
+                        lockedTask.setNextProduct();
+                        break;
+                       /*
+                            TUTAJ POTRZEBNY KOD NA SESSION.FREETASK
+                        */
+
+                    }
+                }
+
+               if (!products.contains(lockedTask.getNextProduct())){
+                   session.lockTask(0, lockedTask.getClientId());
+                   break;
+               }
+
+
+            }
 
             break;
         }

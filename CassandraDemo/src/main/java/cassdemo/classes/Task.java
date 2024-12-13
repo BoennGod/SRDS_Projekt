@@ -1,8 +1,6 @@
 package cassdemo.classes;
 
-import java.util.List;
 import java.util.Map;
-import cassdemo.classes.Product;
 
 public class Task {
     private int clientId;
@@ -50,7 +48,7 @@ public class Task {
     }
 
 
-    public String getNeededProduct() {
+    public String getNextProduct() {
         for (Map.Entry<String, String> entry : productsNeeded.entrySet()) {
             if ("pending".equals(entry.getValue())) {                           //HERE SET PENDING TO WHATEVER WE DECIDED ON
                 return entry.getKey();
@@ -60,7 +58,7 @@ public class Task {
     }
 
 
-    public String setNeededProduct() {
+    public String setNextProduct() {
         for (Map.Entry<String, String> entry : productsNeeded.entrySet()) {
             if ("pending".equals(entry.getValue())) {                           //HERE SET PENDING TO WHATEVER WE DECIDED ON
                 productsNeeded.put(entry.getKey(), "done");                     //HERE SET DONE TO WHATEVER WE DECIDED ON

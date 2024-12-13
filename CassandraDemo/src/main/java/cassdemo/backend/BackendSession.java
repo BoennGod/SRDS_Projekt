@@ -198,7 +198,7 @@ public class BackendSession {
 		return LockChecking(machineId, CHECK_LOCKED_MACHINE);
 	}
 
-	public int checkedLockedTasks(int taskId) {
+	public int checkedLockedTask(int taskId) {
 		return LockChecking(taskId, CHECK_LOCKED_TASK);
 	}
 
