@@ -50,7 +50,7 @@ public class Task {
 
     public String getNextProduct() {
         for (Map.Entry<String, String> entry : productsNeeded.entrySet()) {
-            if ("pending".equals(entry.getValue())) {                           //HERE SET PENDING TO WHATEVER WE DECIDED ON
+            if ("Pending".equals(entry.getValue())) {                           //HERE SET PENDING TO WHATEVER WE DECIDED ON
                 return entry.getKey();
             }
         }
@@ -60,8 +60,8 @@ public class Task {
 
     public String setNextProduct() {
         for (Map.Entry<String, String> entry : productsNeeded.entrySet()) {
-            if ("pending".equals(entry.getValue())) {                           //HERE SET PENDING TO WHATEVER WE DECIDED ON
-                productsNeeded.put(entry.getKey(), "done");                     //HERE SET DONE TO WHATEVER WE DECIDED ON
+            if ("Pending".equals(entry.getValue())) {                           //HERE SET PENDING TO WHATEVER WE DECIDED ON
+                productsNeeded.put(entry.getKey(), "Done");                     //HERE SET DONE TO WHATEVER WE DECIDED ON
                 return entry.getKey();
             }
         }

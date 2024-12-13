@@ -35,7 +35,7 @@ public class Factory implements Runnable {
     public void run() {
         List<Machine> machines;
         Random random = new Random();
-
+        products = new ArrayList<>();
         System.out.println("Started a Factory " + id);
 
         // machines
@@ -95,6 +95,7 @@ public class Factory implements Runnable {
 
             for (Task task : tasks) {                                   //check all tasks
                 if (task.getFactoryId() == 0) {                         // if task is free
+                    System.out.println(task);
                     if (products.contains(task.getNextProduct())){    // and has available product we can produce
                         boolean locked = session.lockTask(id, task.getClientId());       //   try to lock it in
 
@@ -132,18 +133,20 @@ public class Factory implements Runnable {
                             Thread.currentThread().interrupt();
                         }
                         lockedTask.setNextProduct();
+                        System.out.println("did task " + lockedTask);
                         break;
                        /*
                             TUTAJ POTRZEBNY KOD NA SESSION.FREETASK
                         */
 
+
                     }
                 }
 
-               if (!products.contains(lockedTask.getNextProduct())){
+                if (!products.contains(lockedTask.getNextProduct())){
                    session.lockTask(0, lockedTask.getClientId());
                    break;
-               }
+                }
 
 
             }
