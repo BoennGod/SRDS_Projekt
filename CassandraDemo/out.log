@@ -1,11 +1,10 @@
-233  INFO  c.d.driver.core.GuavaCompatibility: Detected Guava >= 19 in the classpath, using modern compatibility layer
-404  INFO  com.datastax.driver.core.Native: Could not load JNR C Library, native system calls through this library will not be available (set this logger level to DEBUG to see the full stack trace).
-404  INFO  c.datastax.driver.core.ClockFactory: Using java.lang.System clock to generate timestamps.
-489  WARN  com.datastax.driver.core.NettyUtil: Found Netty's native epoll transport, but not running on linux-based operating system. Using NIO instead.
-873  INFO  c.d.d.c.p.DCAwareRoundRobinPolicy: Using data-center name 'datacenter1' for DCAwareRoundRobinPolicy (if this is incorrect, please provide the correct datacenter name with DCAwareRoundRobinPolicy constructor)
-875  INFO  com.datastax.driver.core.Cluster: New Cassandra host /127.0.0.1:9042 added
-927  INFO  cassdemo.backend.BackendSession: Statements prepared
-944  INFO  cassdemo.backend.BackendSession: ResultSet[ exhausted: false, Columns[id(int), factory_id(int), tasks(map<varchar, varchar>)]]
-944  INFO  cassdemo.backend.BackendSession: ResultSet[ exhausted: false, Columns[id(int), factory_id(int), tasks(map<varchar, varchar>)]]
-945  INFO  cassdemo.backend.BackendSession: My order is done.
-945  INFO  cassdemo.backend.BackendSession: My order is done.
+281  INFO  c.d.driver.core.GuavaCompatibility: Detected Guava >= 19 in the classpath, using modern compatibility layer
+458  INFO  com.datastax.driver.core.Native: Could not load JNR C Library, native system calls through this library will not be available (set this logger level to DEBUG to see the full stack trace).
+458  INFO  c.datastax.driver.core.ClockFactory: Using java.lang.System clock to generate timestamps.
+553  WARN  com.datastax.driver.core.NettyUtil: Found Netty's native epoll transport, but not running on linux-based operating system. Using NIO instead.
+1082 INFO  c.d.d.c.p.DCAwareRoundRobinPolicy: Using data-center name 'datacenter1' for DCAwareRoundRobinPolicy (if this is incorrect, please provide the correct datacenter name with DCAwareRoundRobinPolicy constructor)
+1090 INFO  com.datastax.driver.core.Cluster: New Cassandra host /127.0.0.1:9042 added
+1198 INFO  cassdemo.backend.BackendSession: Statements prepared
+1220 INFO  cassdemo.backend.BackendSession: 1 Checking my order...
+11242 INFO  cassdemo.backend.BackendSession: 1 Checking my order...
+21255 INFO  cassdemo.backend.BackendSession: 1 Checking my order...

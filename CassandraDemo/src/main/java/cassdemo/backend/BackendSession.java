@@ -42,13 +42,16 @@ public class BackendSession {
 
 	private static PreparedStatement GET_MACHINES;
 	private static PreparedStatement LOCK_MACHINE;
+
     private static PreparedStatement INSERT_TO_TASKS;
     private static PreparedStatement DELETE_FROM_TASKS;
     private static PreparedStatement SELECT_FROM_TASKS;
+   // private static PreparedStatement FINISH_PRODUCT;
 
 	private static PreparedStatement GET_TASKS;
 	private static PreparedStatement LOCK_TASK;
 	private static PreparedStatement FREE_TASK;
+	private static PreparedStatement FINISH_TASK;
 
 
 	private static final String USER_FORMAT = "- %-10s  %-16s %-10s %-10s\n";
@@ -61,10 +64,11 @@ public class BackendSession {
 			LOCK_MACHINE = session.prepare("UPDATE machines SET factory_id = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
 			GET_TASKS = session.prepare("SELECT * FROM tasks").setConsistencyLevel(ConsistencyLevel.ONE);
 			LOCK_TASK = session.prepare("UPDATE tasks SET factory_id = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
-			FREE_TASK = session.prepare("UPDATE tasks SET factory_id = ?, tasks = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM) ;
+			FREE_TASK = session.prepare("UPDATE tasks SET factory_id = 0, tasks = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
+			FINISH_TASK = session.prepare("UPDATE tasks SET factory_id = 0, status = 'd' where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
 
             SELECT_FROM_TASKS = session.prepare("SELECT * FROM Tasks WHERE id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
-            INSERT_TO_TASKS = session.prepare("INSERT INTO Tasks (id, factory_id, tasks) VALUES (?, ?, ?)").setConsistencyLevel(ConsistencyLevel.QUORUM);
+            INSERT_TO_TASKS = session.prepare("INSERT INTO Tasks (id, factory_id, tasks, status) VALUES (?, ?, ?, ?)").setConsistencyLevel(ConsistencyLevel.QUORUM);
             DELETE_FROM_TASKS = session.prepare("DELETE FROM Tasks WHERE id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
 	} catch (Exception e) {
 			throw new BackendException("Could not prepare statements. " + e.getMessage() + ".", e);
@@ -116,20 +120,6 @@ public class BackendSession {
         }
     }
 
-	public void insertTask(Integer id, HashMap<String, String> tasks ){
-		boolean error = false;
-		BoundStatement bs = new BoundStatement(INSERT_TO_TASKS);
-		bs.bind(id, null, tasks);
-		session.execute(bs);
-
-	}
-
-	public void deleteTask(Integer id){
-		BoundStatement bs = new BoundStatement(DELETE_FROM_TASKS);
-		bs.bind(id);
-		session.execute(bs);
-	}
-
 	public Integer selectTask(Integer id){
 		BoundStatement bs = new BoundStatement(SELECT_FROM_TASKS);
 		ResultSet resultSet = session.execute(bs.bind(id));
@@ -140,10 +130,47 @@ public class BackendSession {
 		return null;
 	}
 
+	public void insertTask(Integer id, HashMap<String, String> tasks, String status ){
+		BoundStatement bs = new BoundStatement(INSERT_TO_TASKS);
+		bs.bind(id, 0, tasks, status);
+		session.execute(bs);
+	}
+//TODO: trzeba przetestowac z fabrykami, tutaj trzeba by podać całą mapę tasków zaktualizowaną przez fabrykę i ją całą wymieniamy w bazie (tak chyba bedzie najlatwiej)
+	public void freeTask(HashMap<String, String> tasks, Integer task_id){
+		BoundStatement bs = new BoundStatement(FREE_TASK);
+		bs.bind(tasks, task_id);
+		session.execute(bs);
+	}
+//TODO: trzeba przetestowac z fabrykami
+	public void finishTask(Integer task_id){
+		BoundStatement bs = new BoundStatement(FINISH_TASK);
+		bs.bind(task_id);
+		session.execute(bs);
+	}
+
+	public void deleteTask(Integer id){
+		BoundStatement bs = new BoundStatement(DELETE_FROM_TASKS);
+		bs.bind(id);
+		session.execute(bs);
+	}
+
 	public Boolean checkifTaskDone(Integer id){
 		BoundStatement bs = new BoundStatement(SELECT_FROM_TASKS);
 		ResultSet resultSet = session.execute(bs.bind(id));
-		logger.info(resultSet.toString());
+		Row row = resultSet.one();
+		if(row.getString("status").equals("nd")){
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
+//To sprawdza po kolei w mapie zadan czy wszystko jest gotowe do wydania produktu
+	public Boolean checkAllParts(Integer id){
+		BoundStatement bs = new BoundStatement(SELECT_FROM_TASKS);
+		ResultSet resultSet = session.execute(bs.bind(id));
 		Row row = resultSet.one();
 		Map<String, String> tasks = row.getMap("tasks", String.class, String.class);
 		for(Map.Entry<String, String> task: tasks.entrySet()){
