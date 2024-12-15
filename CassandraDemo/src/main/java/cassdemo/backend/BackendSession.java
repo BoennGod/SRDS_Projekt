@@ -133,7 +133,7 @@ public class BackendSession {
             int factory_id = row.getInt("factory_id");
 			Map<String, String> tasks = row.getMap("tasks", String.class, String.class);
 			String status =  row.getString("status");
-			 task = new Task(id, factory_id, tasks, status);
+			task = new Task(id, factory_id, tasks, status);
         }
 		return task;
     }
@@ -143,13 +143,13 @@ public class BackendSession {
         bs.bind(id, 0, tasks, status);
         session.execute(bs);
     }
-    //TODO: trzeba przetestowac z fabrykami
+
     public void freeTask(Map<String, String> tasks, Integer task_id){
         BoundStatement bs = new BoundStatement(FREE_TASK);
         bs.bind(tasks, task_id);
         session.execute(bs);
     }
-    //TODO: trzeba przetestowac z fabrykami
+
     public void finishTask(Map<String, String> tasks, Integer task_id){
         BoundStatement bs = new BoundStatement(FINISH_TASK);
         bs.bind(tasks, task_id);
