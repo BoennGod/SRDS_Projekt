@@ -70,7 +70,7 @@ public class BackendSession {
 			FREE_TASK = session.prepare("UPDATE tasks SET factory_id = 0, tasks = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
 			FINISH_TASK = session.prepare("UPDATE tasks SET factory_id = 0, tasks =?, status = 'Done' where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
 
-            SELECT_FROM_TASKS = session.prepare("SELECT * FROM Tasks WHERE id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
+            SELECT_FROM_TASKS = session.prepare("SELECT * FROM Tasks WHERE id = ?").setConsistencyLevel(ConsistencyLevel.ONE);
             INSERT_TO_TASKS = session.prepare("INSERT INTO Tasks (id, factory_id, tasks, status) VALUES (?, ?, ?, ?)").setConsistencyLevel(ConsistencyLevel.QUORUM);
             DELETE_FROM_TASKS = session.prepare("DELETE FROM Tasks WHERE id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
 
