@@ -94,10 +94,10 @@ public class Factory implements Runnable {
             chosen = false;
 
             for (Task task : tasks) {                                   //check all tasks
-                if (task.getFactoryId() == 0) {                         // if task is free
+                if (task.getFactoryId() == 0) {                        // if task is free
                     if (products.contains(task.getNextProduct())){    // and has available product we can produce
                         System.out.println("Factory "+id+": Trying to lock task "+task);
-                        boolean locked = session.lockTask(id, task.getClientId());       //   try to lock it in
+                        boolean locked = session.lockTask(id, task.getClientId());       //  try to lock it in
 
                         boolean loaded  = id == session.checkedLockedTask(task.getClientId()); // check if truly locked
 
