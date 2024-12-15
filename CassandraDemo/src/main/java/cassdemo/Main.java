@@ -30,7 +30,7 @@ public class Main {
 		BackendSession session = new BackendSession(contactPoint, keyspace);
 
 
-		int numthreads = 1;
+		int numthreads = 2;
 
         Thread[] clients = new Thread[numthreads];
         Thread[] factories = new Thread[numthreads];
