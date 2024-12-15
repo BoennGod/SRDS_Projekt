@@ -1,8 +1,6 @@
 package cassdemo.classes;
 
-import java.util.List;
 import java.util.Map;
-import cassdemo.classes.Product;
 
 public class Task {
     private int clientId;
@@ -25,11 +23,11 @@ public class Task {
         this.clientId = clientId;
     }
 
-    public int getfactoryId() {
+    public int getFactoryId() {
         return factoryId;
     }
 
-    public void setfactoryId(int factoryId) {
+    public void setFactoryId(int factoryId) {
         this.factoryId = factoryId;
     }
 
@@ -49,6 +47,28 @@ public class Task {
         this.taskStatus = taskStatus;
     }
 
+
+    public String getNextProduct() {
+        for (Map.Entry<String, String> entry : productsNeeded.entrySet()) {
+            if ("Pending".equals(entry.getValue())) {                           //HERE SET PENDING TO WHATEVER WE DECIDED ON
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+
+    public String setNextProduct() {
+        for (Map.Entry<String, String> entry : productsNeeded.entrySet()) {
+            if ("Pending".equals(entry.getValue())) {                           //HERE SET PENDING TO WHATEVER WE DECIDED ON
+                productsNeeded.put(entry.getKey(), "Done");                     //HERE SET DONE TO WHATEVER WE DECIDED ON
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+
     @Override
     public String toString() {
         return "Task{" +
@@ -58,4 +78,6 @@ public class Task {
                 ", taskStatus='" + taskStatus + '\'' +
                 '}';
     }
+
+
 }

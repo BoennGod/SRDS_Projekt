@@ -5,7 +5,6 @@ import cassdemo.backend.BackendSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Map;
 
 public class Factory implements Runnable {
     //1. machines
@@ -20,11 +19,10 @@ public class Factory implements Runnable {
     // 2.4 after doing everything I can do on this task, free it for the others
     //
 
+    private final BackendSession session;
 
     int id;
-    private BackendSession session;
-
-    private List<Machine> machines;
+    private List<String> products;
     private List<Machine> lockedMachines;
 
     public Factory(BackendSession session, int id) {
@@ -35,35 +33,47 @@ public class Factory implements Runnable {
 
     @Override
     public void run() {
+        List<Machine> machines;
         Random random = new Random();
-
+        products = new ArrayList<>();
         System.out.println("Started a Factory " + id);
 
         // machines
         machines = session.getMachines();
 
-
+        // see what machines are already assigned to us
+        for (Machine machine : machines) {
+            if (machine.getFactoryId() == id) {
+                lockedMachines.add(machine);
+                products.add(machine.getProductType());
+            }
+        }
+        // try to assign at least 3 machines
         while (lockedMachines.size() < 3) {
             List<Machine> availableMachines = new ArrayList<>();
             for (Machine machine : machines) {
-                if (machine.getFactoryId() == 0) {
+                if (machine.getFactoryId() == 0 && !products.contains(machine.getProductType())) {
                     availableMachines.add(machine);
                 }
             }
             if (availableMachines.isEmpty()) {
-                System.out.println("No available machines to lock.");
+                System.out.println("factory " + id + " has no available machines to lock.");
                 break;
             }
-            System.out.println("got to availible machines");
 
             Machine machine = availableMachines.get(random.nextInt(availableMachines.size()));
             System.out.println("Attempting to lock machine: " + machine);
 
             boolean locked = session.lockMachine(id, machine.getMachineId());
 
-            if (locked) {
+
+            boolean loaded = id == session.checkedLockedMachine(machine.getMachineId());
+
+
+            if (locked && loaded) {
                 System.out.println("Successfully locked machine with ID: " + machine.getMachineId());
                 lockedMachines.add(machine);
+                products.add(machine.getProductType());
                 machines.remove(machine);
             } else {
                 System.out.println("Failed to lock machine with ID: " + machine.getMachineId() + ". Trying another...");
@@ -72,15 +82,80 @@ public class Factory implements Runnable {
 
         System.out.println("Factory " + id + " locked machines: " + lockedMachines);
 
+
+        List<Task> tasks;
+        boolean chosen;
+
         // tasks
         while(true){
-            System.out.println(""+session.getTasks());
+            tasks = session.getTasks();
+            System.out.println(tasks);
+            Task lockedTask = null;
+            chosen = false;
+
+            for (Task task : tasks) {                                   //check all tasks
+                if (task.getFactoryId() == 0) {                         // if task is free
+                    System.out.println(task);
+                    if (products.contains(task.getNextProduct())){    // and has available product we can produce
+                        boolean locked = session.lockTask(id, task.getClientId());       //   try to lock it in
+
+                        boolean loaded  = id == session.checkedLockedTask(task.getClientId()); // check if truly locked
+
+                        if (locked && loaded){
+                            lockedTask = task;
+                            chosen = true;
+                            break;              //if done, exit
+                        }
+                    }
+                }
+            }
+
+            // if no task was chosen, try again
+            if (!chosen) {
+                try {
+                    Thread.sleep(1000); // Sleep for 1 second
+                } catch (InterruptedException e) {
+                    System.err.println("Factory " + id + " was interrupted while waiting.");
+                    Thread.currentThread().interrupt(); // Preserve the interrupt status
+                }
+                continue;
+            }
+
+
+            // create products needed for task
+            while (true){
+                for (Machine machine : lockedMachines) {
+                    if (machine.getProductType().equals(lockedTask.getNextProduct())) {
+                        try {
+                            Thread.sleep(machine.getTime()* 1000L);
+                        } catch (InterruptedException e) {
+                            System.err.println("Factory " + id + " was interrupted while waiting.");
+                            Thread.currentThread().interrupt();
+                        }
+                        lockedTask.setNextProduct();
+                        System.out.println("did task " + lockedTask);
+                        break;
+                       /*
+                            TUTAJ POTRZEBNY KOD NA SESSION.FREETASK
+                        */
+
+
+                    }
+                }
+
+                if (!products.contains(lockedTask.getNextProduct())){
+                   session.lockTask(0, lockedTask.getClientId());
+                   break;
+                }
+
+
+            }
 
             break;
         }
         // while loop,
         // get all tasks
-        // try to lock one elegible and then see if you took it,
+        // try to lock one eligible and then see if you took it,
         // do all products that you can
         // give back the task
     }

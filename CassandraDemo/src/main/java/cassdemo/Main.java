@@ -48,7 +48,7 @@ public class Main {
         for (int i =0; i<numthreads;i++){
             try{
                 clients[i].join();
-            }catch (Exception e){
+            }catch (Exception ignored){
 
             }
         }
@@ -56,7 +56,7 @@ public class Main {
 		for (int i = 0; i<numthreads; i++){
 			try{
                 factories[i].join();
-			}catch (Exception e){
+			}catch (Exception ignored){
 
 			}
 		}
