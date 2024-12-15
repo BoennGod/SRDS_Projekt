@@ -67,8 +67,8 @@ public class BackendSession {
 			LOCK_TASK = session.prepare("UPDATE tasks SET factory_id = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
 			CHECK_LOCKED_TASK = session.prepare("SELECT factory_id FROM tasks where id = ?").setConsistencyLevel(ConsistencyLevel.ONE);
 
-			FREE_TASK = session.prepare("UPDATE tasks SET factory_id = ?, tasks = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
-			FINISH_TASK = session.prepare("UPDATE tasks SET factory_id = 0, status = 'finished' where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
+			FREE_TASK = session.prepare("UPDATE tasks SET factory_id = 0, tasks = ? where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
+			FINISH_TASK = session.prepare("UPDATE tasks SET factory_id = 0, tasks =?, status = 'Done' where id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
 
             SELECT_FROM_TASKS = session.prepare("SELECT * FROM Tasks WHERE id = ?").setConsistencyLevel(ConsistencyLevel.QUORUM);
             INSERT_TO_TASKS = session.prepare("INSERT INTO Tasks (id, factory_id, tasks, status) VALUES (?, ?, ?, ?)").setConsistencyLevel(ConsistencyLevel.QUORUM);
@@ -124,30 +124,35 @@ public class BackendSession {
         }
     }
 
-    public void selectTask(Integer id){
+    public Task selectTask(Integer id){
         BoundStatement bs = new BoundStatement(SELECT_FROM_TASKS);
         ResultSet resultSet = session.execute(bs.bind(id));
+		Task task = null;
         if (!resultSet.isExhausted()) {
             Row row = resultSet.one();
-            row.getInt("id");
+            int factory_id = row.getInt("factory_id");
+			Map<String, String> tasks = row.getMap("tasks", String.class, String.class);
+			String status =  row.getString("status");
+			 task = new Task(id, factory_id, tasks, status);
         }
+		return task;
     }
 
-    public void insertTask(Integer id, HashMap<String, String> tasks, String status ){
+    public void insertTask(Integer id, Map<String, String> tasks, String status ){
         BoundStatement bs = new BoundStatement(INSERT_TO_TASKS);
         bs.bind(id, 0, tasks, status);
         session.execute(bs);
     }
     //TODO: trzeba przetestowac z fabrykami
-    public void freeTask(HashMap<String, String> tasks, Integer task_id){
+    public void freeTask(Map<String, String> tasks, Integer task_id){
         BoundStatement bs = new BoundStatement(FREE_TASK);
-        bs.bind(0, tasks, task_id);
+        bs.bind(tasks, task_id);
         session.execute(bs);
     }
     //TODO: trzeba przetestowac z fabrykami
-    public void finishTask(Integer task_id){
+    public void finishTask(Map<String, String> tasks, Integer task_id){
         BoundStatement bs = new BoundStatement(FINISH_TASK);
-        bs.bind(task_id);
+        bs.bind(tasks, task_id);
         session.execute(bs);
     }
 
@@ -156,33 +161,6 @@ public class BackendSession {
 		bs.bind(id);
 		session.execute(bs);
 	}
-
-    public Boolean checkifTaskDone(Integer id){
-        BoundStatement bs = new BoundStatement(SELECT_FROM_TASKS);
-        ResultSet resultSet = session.execute(bs.bind(id));
-        Row row = resultSet.one();
-        if(row.getString("status").equals("nd")){
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
-
-    public Boolean checkAllParts(Integer id){
-		BoundStatement bs = new BoundStatement(SELECT_FROM_TASKS);
-		ResultSet resultSet = session.execute(bs.bind(id));
-		Row row = resultSet.one();
-		Map<String, String> tasks = row.getMap("tasks", String.class, String.class);
-		for(Map.Entry<String, String> task: tasks.entrySet()){
-			if("nd".equals(task.getValue())){
-				return false;
-			}
-		}
-		return true;
-	}
-
 
 	public List<Task> getTasks(){
 		BoundStatement bs = new BoundStatement(GET_TASKS);
@@ -194,8 +172,9 @@ public class BackendSession {
 			int id = row.getInt("id");
 			int factory = row.getInt("factory_id");
 			Map<String, String> Tasks = row.getMap("tasks", String.class, String.class);
+			String status = row.getString("status");
 
-			Task task = new Task(id, factory, Tasks);
+			Task task = new Task(id, factory, Tasks, status);
 			taskList.add(task);
 		}
 		return taskList;

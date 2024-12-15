@@ -8,10 +8,11 @@ public class Task {
     private Map<String, String> productsNeeded;
     private String taskStatus;
 
-    public Task(int clientId, int factoryId, Map<String, String> productsNeeded) {
+    public Task(int clientId, int factoryId, Map<String, String> productsNeeded, String taskStatus) {
         this.clientId = clientId;
         this.factoryId = factoryId;
         this.productsNeeded = productsNeeded;
+        this.taskStatus = taskStatus;
     }
 
     // Getters and setters
@@ -66,6 +67,15 @@ public class Task {
             }
         }
         return null;
+    }
+
+    public Boolean checkIfAllPartsDone(){
+        for (Map.Entry<String, String> entry : productsNeeded.entrySet()) {
+            if ("Pending".equals(entry.getValue())) {                           //HERE SET PENDING TO WHATEVER WE DECIDED ON
+                return false;
+            }
+        }
+        return true;
     }
 
 

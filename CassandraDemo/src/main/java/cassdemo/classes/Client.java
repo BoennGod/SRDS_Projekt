@@ -12,24 +12,30 @@ import static java.lang.Thread.sleep;
 public class Client implements Runnable {
     int id;
     private BackendSession session;
-    String[] possible_parts = {"a", "b", "c", "d", "e"};
+    String[] possible_parts = {"A", "B", "C"};
     Random random = new Random();
 
     private static final Logger logger = LoggerFactory.getLogger(BackendSession.class);
 
     public Client(BackendSession session, int id) {
         this.session = session;
-        this.id = id;
+        this.id = id + 1;
     }
 
     private void generateTask(){
         int len = random.nextInt(5)+1;
-        HashMap<String, String> parts = new HashMap<>();
+        Map<String, String> parts = new HashMap<>();
         for(int i=0; i<len; i++){
-            parts.put(possible_parts[random.nextInt(possible_parts.length)], "nd");
+            parts.put("product"+possible_parts[random.nextInt(possible_parts.length)], "Pending");
         }
-        
-        session.insertTask(id, parts, "nd");
+        session.insertTask(id, parts, "Pending");
+    }
+
+    public Boolean checkTaskDone(){
+        Task task = session.selectTask(id);
+        System.out.println("Client " + id +": Checking my order:: " + task);
+        System.out.println(task);
+        return task.getTaskStatus().equals("Done");
     }
 
     @Override
@@ -37,9 +43,8 @@ public class Client implements Runnable {
         generateTask();
         for(int i=0; i<10; i++){
             while(true) {
-                logger.info(id +" Checking my order...");
-                if (session.checkifTaskDone(id)) {
-                    logger.info("My order is done.");
+                if (checkTaskDone()) {
+                    System.out.println("Client " + id +": My order is done.");
                     session.deleteTask(id);
                     try {
                         sleep(3000);
