@@ -46,7 +46,6 @@ public class BackendSession {
     private static PreparedStatement INSERT_TO_TASKS;
     private static PreparedStatement DELETE_FROM_TASKS;
     private static PreparedStatement SELECT_FROM_TASKS;
-   // private static PreparedStatement FINISH_PRODUCT;
 
 	private static PreparedStatement GET_TASKS;
 	private static PreparedStatement LOCK_TASK;
