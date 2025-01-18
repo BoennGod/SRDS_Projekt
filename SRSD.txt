@@ -1,0 +1,9 @@
+stress testy - czyli wątki które symulują 10 000 użytkowników
+Do zrobienia: liczenie niespójności
+
+>problemy z maszynami
+	> czy zostały zajęte te same maszyny przez fabryki
+>problemy ze zleceniami
+	> czy fabryki zajely te same zlecenia
+	> czy fabryka nie zwolnila innej zadania
+	> czy 

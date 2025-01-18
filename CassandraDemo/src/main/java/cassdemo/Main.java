@@ -37,7 +37,7 @@ public class Main {
         
         for (int i =0; i<numthreads;i++){
             Client c = new Client(session, i);
-            Factory f = new Factory(session, i);
+            Factory f = new Factory(session, i, 0);
             Thread titus1 = new Thread(c);
             Thread titus2 = new Thread(f);
             clients[i] = titus1;

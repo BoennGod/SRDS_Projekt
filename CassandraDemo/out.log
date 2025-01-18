@@ -1,7 +1,7 @@
-269  INFO  c.d.driver.core.GuavaCompatibility: Detected Guava >= 19 in the classpath, using modern compatibility layer
-489  INFO  com.datastax.driver.core.Native: Could not load JNR C Library, native system calls through this library will not be available (set this logger level to DEBUG to see the full stack trace).
-489  INFO  c.datastax.driver.core.ClockFactory: Using java.lang.System clock to generate timestamps.
-572  WARN  com.datastax.driver.core.NettyUtil: Found Netty's native epoll transport, but not running on linux-based operating system. Using NIO instead.
-1033 INFO  c.d.d.c.p.DCAwareRoundRobinPolicy: Using data-center name 'datacenter1' for DCAwareRoundRobinPolicy (if this is incorrect, please provide the correct datacenter name with DCAwareRoundRobinPolicy constructor)
-1037 INFO  com.datastax.driver.core.Cluster: New Cassandra host /127.0.0.1:9042 added
-1101 INFO  cassdemo.backend.BackendSession: Statements prepared
+265  INFO  c.d.driver.core.GuavaCompatibility: Detected Guava >= 19 in the classpath, using modern compatibility layer
+471  INFO  com.datastax.driver.core.Native: Could not load JNR C Library, native system calls through this library will not be available (set this logger level to DEBUG to see the full stack trace).
+471  INFO  c.datastax.driver.core.ClockFactory: Using java.lang.System clock to generate timestamps.
+553  WARN  com.datastax.driver.core.NettyUtil: Found Netty's native epoll transport, but not running on linux-based operating system. Using NIO instead.
+946  INFO  c.d.d.c.p.DCAwareRoundRobinPolicy: Using data-center name 'datacenter1' for DCAwareRoundRobinPolicy (if this is incorrect, please provide the correct datacenter name with DCAwareRoundRobinPolicy constructor)
+948  INFO  com.datastax.driver.core.Cluster: New Cassandra host /127.0.0.1:9042 added
+1006 INFO  cassdemo.backend.BackendSession: Statements prepared

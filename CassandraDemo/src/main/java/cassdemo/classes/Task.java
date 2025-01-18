@@ -4,11 +4,11 @@ import java.util.Map;
 
 public class Task {
     private int clientId;
-    private int factoryId;
+    private String factoryId;
     private Map<String, String> productsNeeded;
     private String taskStatus;
 
-    public Task(int clientId, int factoryId, Map<String, String> productsNeeded, String taskStatus) {
+    public Task(int clientId, String factoryId, Map<String, String> productsNeeded, String taskStatus) {
         this.clientId = clientId;
         this.factoryId = factoryId;
         this.productsNeeded = productsNeeded;
@@ -24,11 +24,11 @@ public class Task {
         this.clientId = clientId;
     }
 
-    public int getFactoryId() {
+    public String getFactoryId() {
         return factoryId;
     }
 
-    public void setFactoryId(int factoryId) {
+    public void setFactoryId(String factoryId) {
         this.factoryId = factoryId;
     }
 

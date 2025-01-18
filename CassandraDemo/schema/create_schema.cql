@@ -5,14 +5,14 @@ USE Test;
 
 CREATE TABLE Tasks (
     id int PRIMARY KEY,
-    factory_id int,
+    factory_id text,
     tasks map <text, text>,
     status text
 );
 
 CREATE TABLE test.machines (
    id int PRIMARY KEY,
-   factory_id int,
+   factory_id text,
    product text,
    time int
 );

@@ -2,11 +2,11 @@ package cassdemo.classes;
 
 public class Machine {
     private int machineId;
-    private int factoryId;
+    private String factoryId;
     private String productType;
     private int time;
 
-    public Machine(int machineId, int factoryId, String productType, int time) {
+    public Machine(int machineId, String factoryId, String productType, int time) {
         this.machineId = machineId;
         this.factoryId = factoryId;
         this.productType = productType;
@@ -22,11 +22,11 @@ public class Machine {
         this.machineId = machineId;
     }
 
-    public int getFactoryId() {
+    public String getFactoryId() {
         return factoryId;
     }
 
-    public void setFactoryId(int factoryId) {
+    public void setFactoryId(String factoryId) {
         this.factoryId = factoryId;
     }
 
