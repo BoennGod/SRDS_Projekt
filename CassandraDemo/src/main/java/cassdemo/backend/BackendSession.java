@@ -123,7 +123,7 @@ public class BackendSession {
         }
     }
 
-    public Task selectTask(Integer id){
+    public Task selectTask(int id){
         BoundStatement bs = new BoundStatement(SELECT_FROM_TASKS);
         ResultSet resultSet = session.execute(bs.bind(id));
 		Task task = null;

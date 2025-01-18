@@ -17,9 +17,9 @@ public class Client implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(BackendSession.class);
 
-    public Client(BackendSession session, int id) {
+    public Client(BackendSession session, int id, int nodeId) {
         this.session = session;
-        this.id = id + 1;
+        this.id = 10000* nodeId + id +1;
     }
 
     private void generateTask(){
