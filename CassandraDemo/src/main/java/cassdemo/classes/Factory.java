@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Factory implements Runnable {
     //1. machines
     // 1.1 choose which you want
@@ -18,6 +21,7 @@ public class Factory implements Runnable {
     // 2.3 assign this task to the machine
     // 2.4 after doing everything I can do on this task, free it for the others
     //
+    private static final Logger logger = LoggerFactory.getLogger(Factory.class);
 
     private final BackendSession session;
 
@@ -36,7 +40,7 @@ public class Factory implements Runnable {
         List<Machine> machines;
         Random random = new Random();
         products = new ArrayList<>();
-        System.out.println("Factory "+id+" Started a Factory");
+        logger.info("{} Started a Factory", id);
 
         // machines
         machines = session.getMachines();
@@ -57,12 +61,12 @@ public class Factory implements Runnable {
                 }
             }
             if (availableMachines.isEmpty()) {
-                System.out.println(id + " has no available machines to lock.");
+                logger.info("{} has no available machines to lock.", id);
                 break;
             }
 
             Machine machine = availableMachines.get(random.nextInt(availableMachines.size()));
-            System.out.println(id+": Attempting to lock machine: " + machine);
+            logger.info("{}: Attempting to lock machine: {}", id, machine);
 
             boolean locked = session.lockMachine(id, machine.getMachineId());
 
@@ -76,16 +80,16 @@ public class Factory implements Runnable {
 
 
             if (locked && loaded) {
-                System.out.println(id+": Successfully locked machine with ID: " + machine.getMachineId());
+                logger.info("SUCCESS {} locked machine with ID: {}", id, machine.getMachineId());
                 lockedMachines.add(machine);
                 products.add(machine.getProductType());
                 machines.remove(machine);
             } else {
-                System.out.println(id+": Failed to lock machine with ID: " + machine.getMachineId() + ". Trying another...");
+                logger.info("FAIL {} did not lock machine with ID: {}. Trying another...", id, machine.getMachineId());
             }
         }
 
-        System.out.println(id + " locked machines: " + lockedMachines);
+        logger.info("{} locked machines: {}", id, lockedMachines);
 
 
         List<Task> tasks;
@@ -101,7 +105,7 @@ public class Factory implements Runnable {
             for (Task task : tasks) {                                   //check all tasks
                 if ("0".equals(task.getFactoryId())||id.equals(task.getFactoryId())) {                        // if task is free
                     if (products.contains(task.getNextProduct())){    // and has available product we can produce
-                        System.out.println(id+": Trying to lock task "+task);
+                        logger.info("{}: Trying to lock task {}", id, task);
                         boolean locked = session.lockTask(id, task.getClientId());       //  try to lock it in
 
                         try {
@@ -117,6 +121,10 @@ public class Factory implements Runnable {
                             chosen = true;
                             break;              //if done, exit
                         }
+                        else{
+                            logger.info("FAIL {} did not lock task {}", id, task);
+                        }
+
                     }
                 }
             }
@@ -144,7 +152,7 @@ public class Factory implements Runnable {
                             Thread.currentThread().interrupt();
                         }
                         lockedTask.setNextProduct();
-                        System.out.println("did task " + lockedTask);
+                        logger.info("{} did task {}", id ,lockedTask);
                         break;
                     }
                 }
@@ -152,11 +160,11 @@ public class Factory implements Runnable {
 
                 if (!products.contains(lockedTask.getNextProduct())){
                     if(lockedTask.checkIfAllPartsDone()){
-                        System.out.println("Factory "+id+": Finished product "+lockedTask);
+                        logger.info("{}: Finished product {}", id, lockedTask);
                         session.finishTask(lockedTask.getProductsNeeded(), lockedTask.getClientId());
                         break;
                     }
-                    System.out.println("Factory "+id+": Did what I could, returning unfinished product "+lockedTask);
+                    logger.info("{}: Did what I could, returning unfinished product {}", id, lockedTask);
                     session.freeTask( lockedTask.getProductsNeeded() ,lockedTask.getClientId());
                     break;
                 }

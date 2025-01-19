@@ -15,7 +15,7 @@ public class Client implements Runnable {
     String[] possible_parts = {"A", "B", "C"};
     Random random = new Random();
 
-    private static final Logger logger = LoggerFactory.getLogger(BackendSession.class);
+    private static final Logger logger = LoggerFactory.getLogger(Client.class);
 
     public Client(BackendSession session, int id, int nodeId) {
         this.session = session;
@@ -33,8 +33,7 @@ public class Client implements Runnable {
 
     public Boolean checkTaskDone(){
         Task task = session.selectTask(id);
-        System.out.println("Client " + id +": Checking my order:: " + task);
-        System.out.println(task);
+        logger.info("Client {}: Checking my order: {}", id, task);
         return task.getTaskStatus().equals("Done");
     }
 
@@ -44,10 +43,10 @@ public class Client implements Runnable {
         for(int i=0; i<10; i++){
             while(true) {
                 if (checkTaskDone()) {
-                    System.out.println("Client " + id +": My order is done.");
+                    logger.info("Client {}: My order is done.", id);
                     session.deleteTask(id);
                     try {
-                        sleep(3000);
+                        sleep(300);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -55,7 +54,7 @@ public class Client implements Runnable {
 
                 }
                 try {
-                    sleep(10000);
+                    sleep(1000);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
