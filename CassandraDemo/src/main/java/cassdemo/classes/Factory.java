@@ -119,6 +119,7 @@ public class Factory implements Runnable {
                         if (locked && loaded){
                             lockedTask = task;
                             chosen = true;
+                            logger.info("SUCCESS {} locked task {}", id, task);
                             break;              //if done, exit
                         }
                         else{

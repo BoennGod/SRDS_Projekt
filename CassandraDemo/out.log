@@ -1,7 +1,208 @@
-249  INFO  c.d.driver.core.GuavaCompatibility: Detected Guava >= 19 in the classpath, using modern compatibility layer
-469  INFO  com.datastax.driver.core.Native: Could not load JNR C Library, native system calls through this library will not be available (set this logger level to DEBUG to see the full stack trace).
-469  INFO  c.datastax.driver.core.ClockFactory: Using java.lang.System clock to generate timestamps.
-549  WARN  com.datastax.driver.core.NettyUtil: Found Netty's native epoll transport, but not running on linux-based operating system. Using NIO instead.
-938  INFO  c.d.d.c.p.DCAwareRoundRobinPolicy: Using data-center name 'datacenter1' for DCAwareRoundRobinPolicy (if this is incorrect, please provide the correct datacenter name with DCAwareRoundRobinPolicy constructor)
-940  INFO  com.datastax.driver.core.Cluster: New Cassandra host /127.0.0.1:9042 added
-986  INFO  cassdemo.backend.BackendSession: Statements prepared
+260  INFO  c.d.driver.core.GuavaCompatibility: Detected Guava >= 19 in the classpath, using modern compatibility layer
+441  INFO  com.datastax.driver.core.Native: Could not load JNR C Library, native system calls through this library will not be available (set this logger level to DEBUG to see the full stack trace).
+441  INFO  c.datastax.driver.core.ClockFactory: Using java.lang.System clock to generate timestamps.
+540  WARN  com.datastax.driver.core.NettyUtil: Found Netty's native epoll transport, but not running on linux-based operating system. Using NIO instead.
+923  INFO  c.d.d.c.p.DCAwareRoundRobinPolicy: Using data-center name 'datacenter1' for DCAwareRoundRobinPolicy (if this is incorrect, please provide the correct datacenter name with DCAwareRoundRobinPolicy constructor)
+923  INFO  com.datastax.driver.core.Cluster: New Cassandra host /127.0.0.1:9042 added
+990  INFO  cassdemo.backend.BackendSession: Statements prepared
+993  INFO  cassdemo.classes.Factory: factory-0-node-1 Started a Factory
+993  INFO  cassdemo.classes.Factory: factory-1-node-1 Started a Factory
+1003 INFO  cassdemo.classes.Factory: factory-1-node-1: Attempting to lock machine: Machine{machineId='3', factoryId='0', productType='productC', time=3}
+1003 INFO  cassdemo.classes.Factory: factory-0-node-1 locked machines: [Machine{machineId='5', factoryId='factory-0-node-1', productType='productA', time=3}, Machine{machineId='2', factoryId='factory-0-node-1', productType='productB', time=2}, Machine{machineId='6', factoryId='factory-0-node-1', productType='productC', time=2}]
+1007 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productC=Pending}, taskStatus='Pending'}
+1007 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productB=Pending}, taskStatus='Pending'}
+1015 INFO  cassdemo.classes.Factory: factory-0-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productC=Pending}, taskStatus='Pending'}
+1044 INFO  cassdemo.classes.Factory: SUCCESS factory-0-node-1 locked task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productC=Pending}, taskStatus='Pending'}
+1044 INFO  cassdemo.classes.Factory: SUCCESS factory-1-node-1 locked machine with ID: 3
+1044 INFO  cassdemo.classes.Factory: factory-1-node-1: Attempting to lock machine: Machine{machineId='4', factoryId='0', productType='productB', time=1}
+1074 INFO  cassdemo.classes.Factory: SUCCESS factory-1-node-1 locked machine with ID: 4
+1074 INFO  cassdemo.classes.Factory: factory-1-node-1: Attempting to lock machine: Machine{machineId='1', factoryId='0', productType='productA', time=1}
+1087 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productC=Pending}, taskStatus='Pending'}
+1106 INFO  cassdemo.classes.Factory: SUCCESS factory-1-node-1 locked machine with ID: 1
+1106 INFO  cassdemo.classes.Factory: factory-1-node-1 locked machines: [Machine{machineId='3', factoryId='0', productType='productC', time=3}, Machine{machineId='4', factoryId='0', productType='productB', time=1}, Machine{machineId='1', factoryId='0', productType='productA', time=1}]
+1110 INFO  cassdemo.classes.Factory: factory-1-node-1: Trying to lock task Task{clientId='10002'factoryId='0', productsNeeded={productB=Pending}, taskStatus='Pending'}
+1118 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productC=Done}, taskStatus='Pending'}
+1118 INFO  cassdemo.classes.Factory: factory-0-node-1: Finished product Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productC=Done}, taskStatus='Pending'}
+1137 INFO  cassdemo.classes.Factory: SUCCESS factory-1-node-1 locked task Task{clientId='10002'factoryId='0', productsNeeded={productB=Pending}, taskStatus='Pending'}
+1150 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productB=Done}, taskStatus='Pending'}
+1150 INFO  cassdemo.classes.Factory: factory-1-node-1: Finished product Task{clientId='10002'factoryId='0', productsNeeded={productB=Done}, taskStatus='Pending'}
+2022 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productB=Done}, taskStatus='Done'}
+2022 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productC=Done}, taskStatus='Done'}
+2022 INFO  cassdemo.classes.Client: Client 10002: My order is done.
+2022 INFO  cassdemo.classes.Client: Client 10001: My order is done.
+2339 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productB=Pending}, taskStatus='Pending'}
+2339 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productB=Pending, productC=Pending}, taskStatus='Pending'}
+2351 INFO  cassdemo.classes.Factory: factory-1-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productB=Pending, productC=Pending}, taskStatus='Pending'}
+2351 INFO  cassdemo.classes.Factory: factory-0-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productB=Pending, productC=Pending}, taskStatus='Pending'}
+2366 INFO  cassdemo.classes.Factory: SUCCESS factory-1-node-1 locked task Task{clientId='10001'factoryId='0', productsNeeded={productB=Pending, productC=Pending}, taskStatus='Pending'}
+2367 INFO  cassdemo.classes.Factory: FAIL factory-0-node-1 did not lock task Task{clientId='10001'factoryId='0', productsNeeded={productB=Pending, productC=Pending}, taskStatus='Pending'}
+2368 INFO  cassdemo.classes.Factory: factory-0-node-1: Trying to lock task Task{clientId='10002'factoryId='0', productsNeeded={productB=Pending}, taskStatus='Pending'}
+2379 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productB=Done, productC=Pending}, taskStatus='Pending'}
+2401 INFO  cassdemo.classes.Factory: SUCCESS factory-0-node-1 locked task Task{clientId='10002'factoryId='0', productsNeeded={productB=Pending}, taskStatus='Pending'}
+2412 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productB=Done, productC=Done}, taskStatus='Pending'}
+2412 INFO  cassdemo.classes.Factory: factory-1-node-1: Finished product Task{clientId='10001'factoryId='0', productsNeeded={productB=Done, productC=Done}, taskStatus='Pending'}
+2427 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productB=Done}, taskStatus='Pending'}
+2427 INFO  cassdemo.classes.Factory: factory-0-node-1: Finished product Task{clientId='10002'factoryId='0', productsNeeded={productB=Done}, taskStatus='Pending'}
+3357 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productB=Done}, taskStatus='Done'}
+3357 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productB=Done, productC=Done}, taskStatus='Done'}
+3357 INFO  cassdemo.classes.Client: Client 10002: My order is done.
+3357 INFO  cassdemo.classes.Client: Client 10001: My order is done.
+3674 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productC=Pending}, taskStatus='Pending'}
+3674 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productC=Pending}, taskStatus='Pending'}
+3688 INFO  cassdemo.classes.Factory: factory-0-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productC=Pending}, taskStatus='Pending'}
+3688 INFO  cassdemo.classes.Factory: factory-1-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productC=Pending}, taskStatus='Pending'}
+3718 INFO  cassdemo.classes.Factory: FAIL factory-0-node-1 did not lock task Task{clientId='10001'factoryId='0', productsNeeded={productC=Pending}, taskStatus='Pending'}
+3718 INFO  cassdemo.classes.Factory: SUCCESS factory-1-node-1 locked task Task{clientId='10001'factoryId='0', productsNeeded={productC=Pending}, taskStatus='Pending'}
+3719 INFO  cassdemo.classes.Factory: factory-0-node-1: Trying to lock task Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productC=Pending}, taskStatus='Pending'}
+3733 INFO  cassdemo.classes.Factory: SUCCESS factory-0-node-1 locked task Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productC=Pending}, taskStatus='Pending'}
+3763 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productC=Done}, taskStatus='Pending'}
+3763 INFO  cassdemo.classes.Factory: factory-1-node-1: Finished product Task{clientId='10001'factoryId='0', productsNeeded={productC=Done}, taskStatus='Pending'}
+3778 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productC=Pending}, taskStatus='Pending'}
+3810 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productC=Done}, taskStatus='Pending'}
+3811 INFO  cassdemo.classes.Factory: factory-0-node-1: Finished product Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productC=Done}, taskStatus='Pending'}
+4678 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productC=Done}, taskStatus='Done'}
+4678 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productC=Done}, taskStatus='Done'}
+4678 INFO  cassdemo.classes.Client: Client 10001: My order is done.
+4678 INFO  cassdemo.classes.Client: Client 10002: My order is done.
+4996 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+4996 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productB=Pending}, taskStatus='Pending'}
+5009 INFO  cassdemo.classes.Factory: factory-0-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+5009 INFO  cassdemo.classes.Factory: factory-1-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+5025 INFO  cassdemo.classes.Factory: FAIL factory-0-node-1 did not lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+5025 INFO  cassdemo.classes.Factory: SUCCESS factory-1-node-1 locked task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+5025 INFO  cassdemo.classes.Factory: factory-0-node-1: Trying to lock task Task{clientId='10002'factoryId='0', productsNeeded={productB=Pending}, taskStatus='Pending'}
+5037 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Pending, productC=Pending}, taskStatus='Pending'}
+5040 INFO  cassdemo.classes.Factory: SUCCESS factory-0-node-1 locked task Task{clientId='10002'factoryId='0', productsNeeded={productB=Pending}, taskStatus='Pending'}
+5055 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Pending}, taskStatus='Pending'}
+5070 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productB=Done}, taskStatus='Pending'}
+5070 INFO  cassdemo.classes.Factory: factory-0-node-1: Finished product Task{clientId='10002'factoryId='0', productsNeeded={productB=Done}, taskStatus='Pending'}
+5085 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Pending'}
+5086 INFO  cassdemo.classes.Factory: factory-1-node-1: Finished product Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Pending'}
+6004 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productB=Done}, taskStatus='Done'}
+6004 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Done'}
+6004 INFO  cassdemo.classes.Client: Client 10002: My order is done.
+6004 INFO  cassdemo.classes.Client: Client 10001: My order is done.
+6324 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending}, taskStatus='Pending'}
+6324 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productC=Pending}, taskStatus='Pending'}
+6337 INFO  cassdemo.classes.Factory: factory-1-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending}, taskStatus='Pending'}
+6337 INFO  cassdemo.classes.Factory: factory-0-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending}, taskStatus='Pending'}
+6353 INFO  cassdemo.classes.Factory: SUCCESS factory-0-node-1 locked task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending}, taskStatus='Pending'}
+6353 INFO  cassdemo.classes.Factory: FAIL factory-1-node-1 did not lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending}, taskStatus='Pending'}
+6353 INFO  cassdemo.classes.Factory: factory-1-node-1: Trying to lock task Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productC=Pending}, taskStatus='Pending'}
+6368 INFO  cassdemo.classes.Factory: SUCCESS factory-1-node-1 locked task Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productC=Pending}, taskStatus='Pending'}
+6382 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productC=Pending}, taskStatus='Pending'}
+6399 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Pending}, taskStatus='Pending'}
+6415 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productC=Done}, taskStatus='Pending'}
+6415 INFO  cassdemo.classes.Factory: factory-1-node-1: Finished product Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productC=Done}, taskStatus='Pending'}
+6430 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done}, taskStatus='Pending'}
+6430 INFO  cassdemo.classes.Factory: factory-0-node-1: Finished product Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done}, taskStatus='Pending'}
+7330 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productC=Done}, taskStatus='Done'}
+7330 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done}, taskStatus='Done'}
+7330 INFO  cassdemo.classes.Client: Client 10002: My order is done.
+7330 INFO  cassdemo.classes.Client: Client 10001: My order is done.
+7645 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productB=Pending, productC=Pending}, taskStatus='Pending'}
+7645 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+7657 INFO  cassdemo.classes.Factory: factory-0-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+7657 INFO  cassdemo.classes.Factory: factory-1-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+7673 INFO  cassdemo.classes.Factory: FAIL factory-0-node-1 did not lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+7673 INFO  cassdemo.classes.Factory: SUCCESS factory-1-node-1 locked task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+7673 INFO  cassdemo.classes.Factory: factory-0-node-1: Trying to lock task Task{clientId='10002'factoryId='0', productsNeeded={productB=Pending, productC=Pending}, taskStatus='Pending'}
+7687 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Pending, productC=Pending}, taskStatus='Pending'}
+7689 INFO  cassdemo.classes.Factory: SUCCESS factory-0-node-1 locked task Task{clientId='10002'factoryId='0', productsNeeded={productB=Pending, productC=Pending}, taskStatus='Pending'}
+7704 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Pending}, taskStatus='Pending'}
+7720 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productB=Done, productC=Pending}, taskStatus='Pending'}
+7736 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Pending'}
+7736 INFO  cassdemo.classes.Factory: factory-1-node-1: Finished product Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Pending'}
+7751 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productB=Done, productC=Done}, taskStatus='Pending'}
+7751 INFO  cassdemo.classes.Factory: factory-0-node-1: Finished product Task{clientId='10002'factoryId='0', productsNeeded={productB=Done, productC=Done}, taskStatus='Pending'}
+8653 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Done'}
+8653 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productB=Done, productC=Done}, taskStatus='Done'}
+8653 INFO  cassdemo.classes.Client: Client 10001: My order is done.
+8653 INFO  cassdemo.classes.Client: Client 10002: My order is done.
+8974 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+8976 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+8985 INFO  cassdemo.classes.Factory: factory-1-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+8985 INFO  cassdemo.classes.Factory: factory-0-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+9000 INFO  cassdemo.classes.Factory: SUCCESS factory-0-node-1 locked task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+9000 INFO  cassdemo.classes.Factory: FAIL factory-1-node-1 did not lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+9000 INFO  cassdemo.classes.Factory: factory-1-node-1: Trying to lock task Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+9016 INFO  cassdemo.classes.Factory: SUCCESS factory-1-node-1 locked task Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+9033 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productB=Pending, productC=Pending}, taskStatus='Pending'}
+9033 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Pending, productC=Pending}, taskStatus='Pending'}
+9049 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Pending}, taskStatus='Pending'}
+9065 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Pending}, taskStatus='Pending'}
+9080 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Pending'}
+9081 INFO  cassdemo.classes.Factory: factory-1-node-1: Finished product Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Pending'}
+9099 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Pending'}
+9099 INFO  cassdemo.classes.Factory: factory-0-node-1: Finished product Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Pending'}
+9984 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Done'}
+9984 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Done'}
+9985 INFO  cassdemo.classes.Client: Client 10001: My order is done.
+9985 INFO  cassdemo.classes.Client: Client 10002: My order is done.
+10303 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+10303 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productC=Pending}, taskStatus='Pending'}
+10314 INFO  cassdemo.classes.Factory: factory-0-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+10314 INFO  cassdemo.classes.Factory: factory-1-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+10333 INFO  cassdemo.classes.Factory: SUCCESS factory-0-node-1 locked task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+10333 INFO  cassdemo.classes.Factory: FAIL factory-1-node-1 did not lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+10334 INFO  cassdemo.classes.Factory: factory-1-node-1: Trying to lock task Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productC=Pending}, taskStatus='Pending'}
+10349 INFO  cassdemo.classes.Factory: SUCCESS factory-1-node-1 locked task Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productC=Pending}, taskStatus='Pending'}
+10362 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productC=Pending}, taskStatus='Pending'}
+10378 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Pending, productC=Pending}, taskStatus='Pending'}
+10396 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productC=Done}, taskStatus='Pending'}
+10396 INFO  cassdemo.classes.Factory: factory-1-node-1: Finished product Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productC=Done}, taskStatus='Pending'}
+10411 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Pending}, taskStatus='Pending'}
+10443 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Pending'}
+10443 INFO  cassdemo.classes.Factory: factory-0-node-1: Finished product Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Pending'}
+11310 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productC=Done}, taskStatus='Done'}
+11310 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Done'}
+11310 INFO  cassdemo.classes.Client: Client 10002: My order is done.
+11311 INFO  cassdemo.classes.Client: Client 10001: My order is done.
+11628 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productC=Pending}, taskStatus='Pending'}
+11628 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending}, taskStatus='Pending'}
+11640 INFO  cassdemo.classes.Factory: factory-1-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending}, taskStatus='Pending'}
+11640 INFO  cassdemo.classes.Factory: factory-0-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending}, taskStatus='Pending'}
+11656 INFO  cassdemo.classes.Factory: FAIL factory-1-node-1 did not lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending}, taskStatus='Pending'}
+11655 INFO  cassdemo.classes.Factory: SUCCESS factory-0-node-1 locked task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending, productB=Pending}, taskStatus='Pending'}
+11656 INFO  cassdemo.classes.Factory: factory-1-node-1: Trying to lock task Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productC=Pending}, taskStatus='Pending'}
+11671 INFO  cassdemo.classes.Factory: SUCCESS factory-1-node-1 locked task Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productC=Pending}, taskStatus='Pending'}
+11685 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productC=Pending}, taskStatus='Pending'}
+11686 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Pending}, taskStatus='Pending'}
+11717 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done}, taskStatus='Pending'}
+11717 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productC=Done}, taskStatus='Pending'}
+11717 INFO  cassdemo.classes.Factory: factory-0-node-1: Finished product Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done}, taskStatus='Pending'}
+11717 INFO  cassdemo.classes.Factory: factory-1-node-1: Finished product Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productC=Done}, taskStatus='Pending'}
+12636 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productA=Done, productB=Done}, taskStatus='Done'}
+12636 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productC=Done}, taskStatus='Done'}
+12636 INFO  cassdemo.classes.Client: Client 10001: My order is done.
+12636 INFO  cassdemo.classes.Client: Client 10002: My order is done.
+12951 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending}, taskStatus='Pending'}
+12951 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+12964 INFO  cassdemo.classes.Factory: factory-1-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending}, taskStatus='Pending'}
+12964 INFO  cassdemo.classes.Factory: factory-0-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending}, taskStatus='Pending'}
+12981 INFO  cassdemo.classes.Factory: FAIL factory-0-node-1 did not lock task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending}, taskStatus='Pending'}
+12981 INFO  cassdemo.classes.Factory: SUCCESS factory-1-node-1 locked task Task{clientId='10001'factoryId='0', productsNeeded={productA=Pending}, taskStatus='Pending'}
+12981 INFO  cassdemo.classes.Factory: factory-0-node-1: Trying to lock task Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+12994 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productA=Done}, taskStatus='Pending'}
+12994 INFO  cassdemo.classes.Factory: factory-1-node-1: Finished product Task{clientId='10001'factoryId='0', productsNeeded={productA=Done}, taskStatus='Pending'}
+12997 INFO  cassdemo.classes.Factory: SUCCESS factory-0-node-1 locked task Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+13042 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productB=Pending, productC=Pending}, taskStatus='Pending'}
+13073 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Pending}, taskStatus='Pending'}
+13106 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Pending'}
+13106 INFO  cassdemo.classes.Factory: factory-0-node-1: Finished product Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Pending'}
+13970 INFO  cassdemo.classes.Client: Client 10001: Checking my order: Task{clientId='10001'factoryId='0', productsNeeded={productA=Done}, taskStatus='Done'}
+13970 INFO  cassdemo.classes.Client: Client 10002: Checking my order: Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Done'}
+13970 INFO  cassdemo.classes.Client: Client 10001: My order is done.
+13971 INFO  cassdemo.classes.Client: Client 10002: My order is done.
+14315 INFO  cassdemo.classes.Factory: factory-1-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productB=Pending}, taskStatus='Pending'}
+14316 INFO  cassdemo.classes.Factory: factory-0-node-1: Trying to lock task Task{clientId='10001'factoryId='0', productsNeeded={productB=Pending}, taskStatus='Pending'}
+14333 INFO  cassdemo.classes.Factory: SUCCESS factory-0-node-1 locked task Task{clientId='10001'factoryId='0', productsNeeded={productB=Pending}, taskStatus='Pending'}
+14335 INFO  cassdemo.classes.Factory: FAIL factory-1-node-1 did not lock task Task{clientId='10001'factoryId='0', productsNeeded={productB=Pending}, taskStatus='Pending'}
+14335 INFO  cassdemo.classes.Factory: factory-1-node-1: Trying to lock task Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+14351 INFO  cassdemo.classes.Factory: SUCCESS factory-1-node-1 locked task Task{clientId='10002'factoryId='0', productsNeeded={productA=Pending, productB=Pending, productC=Pending}, taskStatus='Pending'}
+14365 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productB=Pending, productC=Pending}, taskStatus='Pending'}
+14365 INFO  cassdemo.classes.Factory: factory-0-node-1 did task Task{clientId='10001'factoryId='0', productsNeeded={productB=Done}, taskStatus='Pending'}
+14365 INFO  cassdemo.classes.Factory: factory-0-node-1: Finished product Task{clientId='10001'factoryId='0', productsNeeded={productB=Done}, taskStatus='Pending'}
+14380 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Pending}, taskStatus='Pending'}
+14412 INFO  cassdemo.classes.Factory: factory-1-node-1 did task Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Pending'}
+14412 INFO  cassdemo.classes.Factory: factory-1-node-1: Finished product Task{clientId='10002'factoryId='0', productsNeeded={productA=Done, productB=Done, productC=Done}, taskStatus='Pending'}
