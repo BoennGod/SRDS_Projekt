@@ -11,6 +11,7 @@ class Measurements {
         double all = 0;
         double result = 0f;
         boolean anomalyFlag = false;
+        int anomaliesNum = 0;
 
         List<String> succList = new ArrayList<>();
         List<String> anomalyList = new ArrayList<>();
@@ -35,11 +36,6 @@ class Measurements {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-        result = (success/all)*100;
-        System.out.println("S"+success);
-        System.out.println("A"+all);
-        DecimalFormat f = new DecimalFormat("##.00");
-        System.out.println("Success rate: "+f.format(result)+"%");
 
         for (int i = 0; i < succList.size(); i++) {
             logsComparissonList.add(extractRelevantPart(succList.get(i), "locked"));
@@ -55,6 +51,7 @@ class Measurements {
                     if (log1.equals(log2)) {
                         if (checkIfAnomalyByTime(succList.get(i), succList.get(j))){
                             anomalyFlag = true;
+                            anomaliesNum += 1;
                             System.out.println("Anomaly found:");
                             System.out.println("Log1: " + succList.get(i));
                             System.out.println("Log2: " + succList.get(j));
@@ -63,10 +60,18 @@ class Measurements {
                 }
             }
         }
+        result = (success/all)*100;
+        System.out.println("Success: "+success);
+        System.out.println("All: "+all);
+        DecimalFormat f = new DecimalFormat("##.00");
+        System.out.println("Success rate: "+f.format(result)+"%");
 
         if (!anomalyFlag){
             System.out.println("No anomalies found.");
+        } else {
+            System.out.println("Anomalies numer: "+ anomaliesNum);
         }
+
 
     }
 
@@ -88,7 +93,7 @@ class Measurements {
     public static Boolean checkIfAnomalyByTime(String log1, String log2) {
         int time1 = Integer.valueOf(getTimeByIndex(log1, 0));
         int time2 = Integer.valueOf(getTimeByIndex(log2, 0));
-        if (time2 < time1+300){
+        if (time2 < time1+500){
             return true;
         }
         return false;

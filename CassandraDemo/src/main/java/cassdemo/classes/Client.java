@@ -12,7 +12,7 @@ import static java.lang.Thread.sleep;
 public class Client implements Runnable {
     int id;
     private BackendSession session;
-    String[] possible_parts = {"A", "B", "C"};
+    String[] possible_parts = {"A", "B", "C","D","E","F","G","H","J","K"};
     Random random = new Random();
 
     private static final Logger logger = LoggerFactory.getLogger(Client.class);
@@ -40,7 +40,7 @@ public class Client implements Runnable {
     @Override
     public void run() {
         generateTask();
-        for(int i=0; i<10; i++){
+        for(int i=0; i<20; i++){
             while(true) {
                 if (checkTaskDone()) {
                     logger.info("Client {}: My order is done.", id);

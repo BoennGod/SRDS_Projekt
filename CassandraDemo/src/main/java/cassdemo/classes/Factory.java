@@ -71,7 +71,7 @@ public class Factory implements Runnable {
             boolean locked = session.lockMachine(id, machine.getMachineId());
 
             try {
-                Thread.sleep(10);
+                Thread.sleep(300);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -109,7 +109,7 @@ public class Factory implements Runnable {
                         boolean locked = session.lockTask(id, task.getClientId());       //  try to lock it in
 
                         try {
-                            Thread.sleep(10);
+                            Thread.sleep(300);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -133,7 +133,7 @@ public class Factory implements Runnable {
             // if no task was chosen, try again
             if (!chosen) {
                 try {
-                    Thread.sleep(10); // Sleep for 1 second
+                    Thread.sleep(100); // Sleep for 1 second
                 } catch (InterruptedException e) {
                     System.err.println(id + " was interrupted while waiting.");
                     Thread.currentThread().interrupt(); // Preserve the interrupt status
@@ -165,8 +165,17 @@ public class Factory implements Runnable {
                         session.finishTask(lockedTask.getProductsNeeded(), lockedTask.getClientId());
                         break;
                     }
-                    logger.info("{}: Did what I could, returning unfinished product {}", id, lockedTask);
-                    session.freeTask( lockedTask.getProductsNeeded() ,lockedTask.getClientId());
+                    boolean loaded  = id.equals(session.checkedLockedTask(lockedTask.getClientId())); // check if truly locked
+
+                    if (loaded){
+                        logger.info("{}: Did what I could, returning unfinished product {}", id, lockedTask);
+                        session.freeTask( lockedTask.getProductsNeeded() ,lockedTask.getClientId());
+                        break;              //if done, exit
+                    }
+                    else{
+                        logger.info("FAIL {} someone stole my task {}", id, lockedTask);
+                    }
+
                     break;
                 }
 
